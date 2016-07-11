@@ -25,6 +25,36 @@ def BuildKNNGraph(site,ls_spot_per_site,ls_nbrs,temp_order,CAPACITY):
 				o_graph.add_edge(ls_spot_per_site[j].sid,ls_spot_per_site[tpk[1]].sid,weight = tpk[0])
 	return o_graph
 
+def ComputeTimeTbl(ls_trip,ls_site,ls_spot,ls_shop):
+	timetable = []
+	timestamp = 0
+	ls_cost = []
+	for trip in ls_trip:
+		# print trip
+		prev = 0
+		prev = GetLoc(copy(trip[0][0]),ls_site,ls_spot,ls_shop)
+		table = {}
+		table['trip'] = copy(trip)
+		cost = 0
+		for step in trip:
+			locid = copy(step[0])
+			bag = copy(step[1])
+			loc = 0
+			loc = GetLoc(locid,ls_site,ls_spot,ls_shop)
+			# print step
+			t_travel = TravelTime(prev,loc)
+			t_proc = ProcTime(bag)
+			if bag == 0:
+				t_proc = 0
+			# print prev.sid,locid,bag
+			prev = 0
+			prev = GetLoc(locid,ls_site,ls_spot,ls_shop)
+			# print 'travel time: ', t_travel, 'process time: ',t_proc
+			cost = copy(cost) + copy(t_travel) + copy(t_proc)
+		table['cost'] = copy(cost)
+		ls_cost.append(copy(table))
+	return ls_cost
+
 def Dist(p1,p2):
 	#return in km, no rounding
 	dist = 0.0
@@ -71,6 +101,7 @@ def FindNaiveAssign(site,o_graph,CAPACITY,temp_order):
 			else:
 				nbr = copy(ls_nbr[0][0])
 			temp_graph.remove_node(new_start)
+		res.append([copy(site.sid),0])
 		ls_res.append(copy(res))
 		# print 'total_bag is ', total_bag
 	return ls_res
@@ -90,6 +121,29 @@ def GetId(str_id):
 	index = 0
 	index = int(str_id[1:len(str_id)]) - 1
 	return index
+
+def GetLngLat(locid,ls_site,ls_spot,ls_shop):
+	lng = 0
+	lat = 0
+	if 'A' in locid:
+		lng = ls_site[GetId(locid)].lng
+		lat = ls_site[GetId(locid)].lat
+	if 'B' in locid:
+		lng = ls_spot[GetId(locid)].lng
+		lat = ls_spot[GetId(locid)].lat
+	if 'S' in locid:
+		lng = ls_shop[GetId(locid)].lng
+		lat = ls_shop[GetId(locid)].lat
+	return [lng,lat]
+
+def GetLoc(locid,ls_site,ls_spot,ls_shop):
+	if 'A' in locid:
+		loc = copy(ls_site[GetId(locid)])
+	if 'B' in locid:
+		loc = copy(ls_spot[GetId(locid)])
+	if 'S' in locid:
+		loc = copy(ls_shop[GetId(locid)])
+	return loc
 
 def KNNGraph(node,o_graph,k):
 	ls_nbr = []
