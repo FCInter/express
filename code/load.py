@@ -1,5 +1,5 @@
 import csv
-import copy
+from copy import copy
 import os
 import datetime
 import time
@@ -94,8 +94,8 @@ def LoadOtOOrder(filename):
 		oid = row[0]
 		spotid = row[1]
 		shopid = row[2]
-		str_ptime = copy.copy(str_date) + 'T' + copy.copy(row[3]) + ':00'
-		str_dtime = copy.copy(str_date) + 'T' + copy.copy(row[4]) + ':00'
+		str_ptime = copy(str_date) + 'T' + copy(row[3]) + ':00'
+		str_dtime = copy(str_date) + 'T' + copy(row[4]) + ':00'
 		ptime = int(time.mktime(datetime.strptime(str_ptime,"%Y-%m-%dT%H:%M:%S").timetuple())/60.0)
 		dtime = int(time.mktime(datetime.strptime(str_dtime,"%Y-%m-%dT%H:%M:%S").timetuple())/60.0)
 		num = int(row[5])

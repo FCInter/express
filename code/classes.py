@@ -72,14 +72,14 @@ class Courier(object):
 class GOrder(object):
 	"""docstring for StartPoint"""
 	oid = 0
-	startid = 0
+	oriid = 0
 	destid = 0
 	ptime = 0
 	dtime = 0
 	num = 0
-	def __init__(self, oid,startid,destid,ptime,dtime,num):
+	def __init__(self, oid,oriid,destid,ptime,dtime,num):
 		self.oid = oid
-		self.startid = startid
+		self.oriid = oriid
 		self.destid = destid
 		self.ptime = ptime
 		self.dtime = dtime
