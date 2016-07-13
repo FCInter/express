@@ -1,4 +1,14 @@
-
+# import csv
+# from copy import copy
+# import os
+# from math import asin,acos,atan,sqrt,sin,cos,tan,pi
+# import classes
+# from datetime import datetime
+# import time
+# from classes import *
+# from tools import *
+# from load import *
+# import networkx as nx
 
 class Site(object):
 	"""docstring for Site"""
@@ -90,6 +100,14 @@ str_date = '1970-01-01'
 
 def main():
 	print speed
+	difflng1 = 121.481796 - 121.486181
+	difflat1 = 31.268236 - 31.270203
+	difflng2 = 121.483459 - 121.486181
+	difflat2 = 31.26614 - 31.270203
+	dir1 = DirTwoPi(difflng1,difflat1)
+	dir2 = DirTwoPi(difflng2,difflat2)
+	print dir1, dir2
+	print ComputeDirDiff(dir1, dir2)
 	return
 
 if __name__ == "__main__":

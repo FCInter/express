@@ -15,6 +15,9 @@ import networkx as nx
 # print Dist(x,y)
 # z = Shop(1,0,93)
 CAPACITY = 140
+# speed = 0.25
+# str_date = '1970-01-01'
+
 def main():
 	[ls_site,ls_spot,ls_shop,ls_dorder,ls_otoorder,ls_courier] = LoadAll()
 	num_dorder = len(ls_dorder)
@@ -26,17 +29,19 @@ def main():
 		ls_res = []
 		temp_order = {}
 		[ls_spot_per_site,temp_order] = FindSpotPerSite(site,ls_spot,ls_dorder)
-		ls_nbrs = KNNLoc(ls_spot_per_site,5)
+		ls_nbrs = KNNLoc(ls_spot_per_site,10)
 		o_graph = BuildKNNGraph(site,ls_spot_per_site,ls_nbrs,temp_order,CAPACITY)
 		ls_res = FindNaiveAssign(site,o_graph,CAPACITY,temp_order)
-		# print ls_res
+		# ls_res = FindADir(site,o_graph,CAPACITY,temp_order,ls_site,ls_spot,ls_shop)
 		print len(ls_res)
 		ls_trip = ComputeTimeTbl(ls_res,ls_site,ls_spot,ls_shop)
 		for trip in ls_trip:
 			cost = copy(cost) + copy(trip['cost'])
+		# for res in ls_res:
+		# 	print res
 		# break
 		total_worker = copy(total_worker) + len(ls_res)
-		# if i >10:
+		# if i ==3:
 		# 	break
 	print 'total_worker is ',total_worker
 	print 'total cost is ', cost

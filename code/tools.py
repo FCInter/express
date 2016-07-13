@@ -8,7 +8,7 @@ from datetime import datetime
 import time
 from classes import *
 import numpy as np
-from numpy import mean, std
+from numpy import mean, std, abs
 import matplotlib.pyplot as plt
 import networkx as nx
 
@@ -24,6 +24,28 @@ def BuildKNNGraph(site,ls_spot_per_site,ls_nbrs,temp_order,CAPACITY):
 			if temp_order[ls_spot_per_site[j].sid] + temp_order[ls_spot_per_site[tpk[1]].sid]<=CAPACITY:
 				o_graph.add_edge(ls_spot_per_site[j].sid,ls_spot_per_site[tpk[1]].sid,weight = tpk[0])
 	return o_graph
+
+def ComputeCoorDirctn(lng1,lat1,lng2,lat2):
+	dirctn = 0.0
+	difflat = lat2 - lat1
+	difflng = lng2 - lng1
+	dirctn = DirTwoPi(difflng,difflat)
+	return dirctn
+
+def ComputeDirDiff(dir1,dir2):
+	dirdiff = 0.0
+	diffraw = 0.0
+	diffraw = abs(dir1 - dir2)
+	if diffraw > pi:
+		dirdiff = 2.0 * pi - diffraw
+	else:
+		dirdiff = diffraw
+	return dirdiff
+
+def ComputeNodeDirctn(p1,p2,ls_site,ls_spot,ls_shop):
+	[lng1,lat1] = GetLngLat(p1,ls_site,ls_spot,ls_shop)
+	[lng2,lat2] = GetLngLat(p2,ls_site,ls_spot,ls_shop)
+	return ComputeCoorDirctn(lng1,lat1,lng2,lat2)
 
 def ComputeTimeTbl(ls_trip,ls_site,ls_spot,ls_shop):
 	timetable = []
@@ -69,17 +91,44 @@ def Dist(p1,p2):
 	dist = copy(dist) / 1000.0
 	return dist
 
+def DirTwoPi(difflng,difflat):
+	dirctn = 0.0
+	if difflng == 0.0:
+		if difflat > 0.0:
+			return pi/2.0
+		elif difflat < 0.0:
+			return pi * 1.5
+		else:
+			return 0.0
+	if difflat == 0.0:
+		if difflng > 0.0:
+			return 0.0
+		elif difflng < 0.0:
+			return pi
+	dirraw = atan(difflat/difflng)
+	if difflng < 0.0:
+		if difflat > 0.0:
+			dirctn = copy(dirraw) + pi
+		elif difflat < 0.0:
+			dirctn = copy(dirraw) + pi
+	elif difflng > 0.0:
+		if difflat < 0.0:
+			dirctn = copy(dirraw) + 2.0 * pi
+		elif difflat > 0.0:
+			dirctn = copy(dirraw)
+	return dirctn
+
 def FindNaiveAssign(site,o_graph,CAPACITY,temp_order):
 	ls_res = []
 	temp_graph = deepcopy(o_graph)
-	# KNNGraph(temp_graph,k,site.sid)
+	# GraphKNN(temp_graph,k,site.sid)
 	r = 0
 	while temp_graph.number_of_edges()>0:
 		res = []
 		# print 'round ',r,'................'
 		r = r + 1
 		# print temp_graph.number_of_edges()
-		nbr = KNNGraph(site.sid,temp_graph,1)[0][0]
+		nbr = GraphKNN(site.sid,temp_graph,1)[0][0]
 		res.append([copy(site.sid),0])
 		# print nbr
 		total_bag = 0
@@ -94,7 +143,7 @@ def FindNaiveAssign(site,o_graph,CAPACITY,temp_order):
 			total_bag = copy(total_bag) + copy(temp_order[nbr])
 			new_start = copy(nbr)
 			nbr = ''
-			ls_nbr = KNNGraph(new_start,temp_graph,2)
+			ls_nbr = GraphKNN(new_start,temp_graph,2)
 			# print 'ls_nbr is ',ls_nbr
 			if ls_nbr[0][0] == site.sid:
 				nbr = copy(ls_nbr[1][0])
@@ -104,6 +153,46 @@ def FindNaiveAssign(site,o_graph,CAPACITY,temp_order):
 		res.append([copy(site.sid),0])
 		ls_res.append(copy(res))
 		# print 'total_bag is ', total_bag
+	return ls_res
+
+def FindADir(site,o_graph,CAPACITY,temp_order,ls_site,ls_spot,ls_shop):
+	ls_res = []
+	temp_graph = deepcopy(o_graph)
+	# GraphKNN(temp_graph,k,site.sid)
+	r = 0
+	prevdir = 0.0
+	while temp_graph.number_of_edges()>0:
+		res = []
+		# print 'round ',r,'................'
+		r = r + 1
+		# print temp_graph.number_of_edges()
+		nbr = GraphKNN(site.sid,temp_graph,1)[0][0]
+		prevdir = ComputeNodeDirctn(site.sid,nbr,ls_site,ls_spot,ls_shop)
+		res.append([copy(site.sid),0])
+		# print nbr
+		total_bag = 0
+		while total_bag + temp_order[nbr] <= CAPACITY:
+			res.append([copy(nbr),temp_order[nbr]])
+			# print 'nbr is ', nbr, 'bag is ', temp_order[nbr]
+			# print 'number of neighbors is ', temp_graph.neighbors(nbr)
+			if len(temp_graph.neighbors(nbr)) <= 1:
+				temp_graph.remove_node(nbr)
+				total_bag = copy(total_bag) + copy(temp_order[nbr])
+				break
+			total_bag = copy(total_bag) + copy(temp_order[nbr])
+			new_start = copy(nbr)
+			nbr = ''
+			ls_nbr = GraphDirKNN(site.sid,new_start,temp_graph,2,prevdir,ls_site,ls_spot,ls_shop)
+			# print 'ls_nbr is ',ls_nbr
+			if ls_nbr[0][0] == site.sid:
+				nbr = copy(ls_nbr[1][0])
+			else:
+				nbr = copy(ls_nbr[0][0])
+			temp_graph.remove_node(new_start)
+			# print nbr
+			prevdir = ComputeNodeDirctn(site.sid,nbr,ls_site,ls_spot,ls_shop)
+		res.append([copy(site.sid),0])
+		ls_res.append(copy(res))
 	return ls_res
 
 def FindSpotPerSite(site,ls_spot,ls_order):
@@ -123,8 +212,8 @@ def GetId(str_id):
 	return index
 
 def GetLngLat(locid,ls_site,ls_spot,ls_shop):
-	lng = 0
-	lat = 0
+	lng = 0.0
+	lat = 0.0
 	if 'A' in locid:
 		lng = ls_site[GetId(locid)].lng
 		lat = ls_site[GetId(locid)].lat
@@ -145,7 +234,25 @@ def GetLoc(locid,ls_site,ls_spot,ls_shop):
 		loc = copy(ls_shop[GetId(locid)])
 	return loc
 
-def KNNGraph(node,o_graph,k):
+def GraphDirKNN(site,node,o_graph,k,prevdir,ls_site,ls_spot,ls_shop):
+	# print 'inside GraphDirKNN...'
+	ls_nbr = []
+	knn = []
+	newdir = 0.0
+	ls_nbrnodes = o_graph.neighbors(node)
+	for nbrnode in ls_nbrnodes:
+		newdir = ComputeNodeDirctn(site,nbrnode,ls_site,ls_spot,ls_shop)
+		# print site, nbrnode, newdir
+		# print ComputeNodeDirctn(site,node,ls_site,ls_spot,ls_shop), prevdir
+		dirdiff = ComputeDirDiff(prevdir, newdir)
+		# print dirdiff
+		ls_nbr.append([copy(nbrnode),copy(dirdiff)])
+	knn = copy(sorted(ls_nbr,key=lambda x:(x[1]))[0:k])
+	# print node, ':'
+	# print sorted(ls_nbr,key=lambda x:(x[1]))
+	return knn
+
+def GraphKNN(node,o_graph,k):
 	ls_nbr = []
 	knn = []
 	ls_nbrnodes = o_graph.neighbors(node)
@@ -251,16 +358,16 @@ def PlotSpotPerSite(ls_site,ls_spot, ls_order):
 		for j in range(0,len(x)):
 			r = int(float(min_r) + float(ls_order[ls_oid_per_site[j]].num - min_size) * float(max_r - min_r) / float(max_size - min_size))
 			plt.scatter(x[j],y[j],color = 'g',s = r)
-		# for j, txt in enumerate(ls_id):
-		# 	plt.annotate(txt,(x[j],y[j]))
+		for j, txt in enumerate(ls_id):
+			plt.annotate(txt,(x[j],y[j]))
 		# plt.xlim(120.8,122.2)
 		# plt.ylim(30.6,32.0)
 		plt.scatter(site.lng,site.lat,color = 'r', s = 210)
 		plt.savefig('../figures/site' + str(i+1) + 'spot.jpg',format = 'jpg')
 		plt.clf()
 		num = copy(num) + len(ls_id)
-		# if i == 5:
-		# break
+		if i == 5:
+			break
 	print 'total spot is ' + str(num)
 	return
 
