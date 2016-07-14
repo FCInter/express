@@ -33,6 +33,9 @@ def main():
 		[ls_spot_per_site,temp_order] = FindSpotPerSite(site,ls_spot,ls_dorder)
 		ls_nbrs = KNNLoc(ls_spot_per_site,40)
 		o_graph = BuildKNNGraph(site,ls_spot_per_site,ls_nbrs,temp_order,CAPACITY)
+		oplt = PlotGraph(o_graph,site,ls_spot)
+		# oplt.savefig('../figures/site' + str(GetId(site.sid)+1) + 'graph.jpg',format = 'jpg')
+		# oplt.clf()
 		ls_res_raw = FindNaiveAssign(site,o_graph,CAPACITY,temp_order)
 		# ls_res_raw = FindADir(site,o_graph,CAPACITY,temp_order,ls_site,ls_spot,ls_shop)
 		print len(ls_res_raw)
@@ -46,6 +49,9 @@ def main():
 		# 	print res_raw
 		# print tournament.hamiltonian_path(o_graph)
 		ls_res = ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop)
+		PlotAssign(oplt,o_graph,ls_res)
+		oplt.savefig('../figures/site' + str(GetId(site.sid)+1) + 'graph.jpg',format = 'jpg')
+		oplt.clf()
 		ls_trip = ComputeTimeTbl(ls_res,ls_site,ls_spot,ls_shop)
 		# cost = 0
 		for trip in ls_trip:
@@ -56,7 +62,7 @@ def main():
 		# 	print res
 		# break
 		total_worker = copy(total_worker) + len(ls_res)
-		# if i ==0:
+		# if i == 5:
 		# 	break
 	print 'total_worker is ',total_worker
 	print 'total cost is ', cost

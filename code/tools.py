@@ -85,9 +85,9 @@ def ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 
 def BuildKNNGraph(site,ls_spot_per_site,ls_nbrs,temp_order,CAPACITY):
 	o_graph = nx.Graph()
-	o_graph.add_node(site.sid)
+	o_graph.add_node(site.sid,bag = 0, lng = site.lng, lat = site.lat)
 	for spot in ls_spot_per_site:
-		o_graph.add_node(spot.sid)
+		o_graph.add_node(spot.sid, bag = temp_order[spot.sid], lng = spot.lng, lat = spot.lat)
 		o_graph.add_edge(site.sid,spot.sid,weight = Dist(site,spot))
 	for j in range(0,len(ls_nbrs)):
 		nbrs = copy(ls_nbrs[j])
@@ -318,23 +318,30 @@ def GetId(str_id):
 def GetLngLat(locid,ls_site,ls_spot,ls_shop):
 	lng = 0.0
 	lat = 0.0
+	if len(ls_spot) + len(ls_shop) == 0:
+		lng = ls_site[GetId(locid)].lng
+		lat = ls_site[GetId(locid)].lat
+		return [lng,lat]
 	if 'A' in locid:
 		lng = ls_site[GetId(locid)].lng
 		lat = ls_site[GetId(locid)].lat
-	if 'B' in locid:
+	elif 'B' in locid:
 		lng = ls_spot[GetId(locid)].lng
 		lat = ls_spot[GetId(locid)].lat
-	if 'S' in locid:
+	elif 'S' in locid:
 		lng = ls_shop[GetId(locid)].lng
 		lat = ls_shop[GetId(locid)].lat
 	return [lng,lat]
 
 def GetLoc(locid,ls_site,ls_spot,ls_shop):
+	if len(ls_spot) + len(ls_shop) == 0:
+		loc = copy(ls_site[GetId(locid)])
+		return loc
 	if 'A' in locid:
 		loc = copy(ls_site[GetId(locid)])
-	if 'B' in locid:
+	elif 'B' in locid:
 		loc = copy(ls_spot[GetId(locid)])
-	if 'S' in locid:
+	elif 'S' in locid:
 		loc = copy(ls_shop[GetId(locid)])
 	return loc
 
@@ -434,6 +441,50 @@ def MinPfctMatching(ls_to_match,ls_site,ls_spot,ls_shop):
 	# print ls_match , min_cost
 	return ls_match
 
+def PlotAssign(oplt,o_graph,ls_assign):
+	for assign in ls_assign:
+		for i in range(0,len(assign)-1):
+			# print assign[i], assign[i+1]
+			locid1 = copy(assign[i][0])
+			locid2 = copy(assign[i+1][0])
+			lng1 = o_graph.node[locid1]['lng']
+			lng2 = o_graph.node[locid2]['lng']
+			lat1 = o_graph.node[locid1]['lat']
+			lat2 = o_graph.node[locid2]['lat']
+			plt.plot([lng1,lng2],[lat1,lat2],linewidth = 2,color = 'b')
+
+	return
+
+def PlotGraph(o_graph,site,ls_spot):
+	# print o_graph.edges()
+	# print o_graph.nodes()
+	# print o_graph.node
+	min_size = 0
+	max_size = 140
+	min_r = 20
+	max_r = 400
+	for node in o_graph.nodes():
+		if node != site.sid:
+			loc = GetLoc(node,ls_spot,[],[])
+			r = 0.0
+			r = int(float(min_r) + float(o_graph.node[loc.sid]['bag'] - min_size) * float(max_r - min_r) / float(max_size - min_size))
+			plt.scatter(loc.lng,loc.lat,color = 'g', s = r)
+			plt.annotate(loc.sid,(loc.lng,loc.lat))
+	plt.scatter(site.lng,site.lat,color = 'r', s = float(max_r+min_r)/2.0)
+	for edge in o_graph.edges():
+		# print edge
+		locid1 = copy(edge[0])
+		locid2 = copy(edge[1])
+		lng1 = o_graph.node[locid1]['lng']
+		lng2 = o_graph.node[locid2]['lng']
+		lat1 = o_graph.node[locid1]['lat']
+		lat2 = o_graph.node[locid2]['lat']
+		plt.plot([lng1,lng2],[lat1,lat2],linewidth = 0.5,color = '#808080')
+		# break
+	# plt.savefig('../figures/site' + str(GetId(site.sid)+1) + 'graph.jpg',format = 'jpg')
+	# plt.clf()
+	return plt
+
 def PlotLoc(ls_loc):
 	num = len(ls_loc)
 	x = []
@@ -477,7 +528,7 @@ def PlotLocs(ls_site,ls_spot,ls_shop):
 	plt.show()
 	return
 
-def PlotSpotPerSite(ls_site,ls_spot, ls_order):
+def PlotSpotPerSite(ls_site,ls_spot,ls_order):
 	num_site = len(ls_site)
 	num_spot = len(ls_spot)
 	num_order = len(ls_order)
@@ -516,8 +567,8 @@ def PlotSpotPerSite(ls_site,ls_spot, ls_order):
 		plt.savefig('../figures/site' + str(i+1) + 'spot.jpg',format = 'jpg')
 		plt.clf()
 		num = copy(num) + len(ls_id)
-		if i == 10:
-			break
+		# if i == 10:
+		# 	break
 	print 'total spot is ' + str(num)
 	return
 
