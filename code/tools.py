@@ -20,6 +20,20 @@ def ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 	# print site
 	for res_raw in ls_res_raw:
 		res = []
+		if len(res_raw) < 8:
+			ls_enum = EnumArrg(res_raw)
+			# print 'raw is', res_raw
+			# print 'number of enumerates is ', len(ls_enum)
+			min_cost = 1000000
+			bsf = []
+			for enum in ls_enum:
+				[cost] = ComputeTimeTbl([enum],ls_site,ls_spot,ls_shop)
+				if cost['cost'] <min_cost:
+					min_cost = copy(cost['cost'])
+					bsf = []
+					bsf = copy(enum)
+			ls_res.append(copy(bsf))
+			continue
 		o_graph = 0
 		o_graph = nx.Graph()
 		for i in range(0,len(res_raw)-1):
