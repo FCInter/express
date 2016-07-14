@@ -16,14 +16,10 @@ import itertools
 def ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 	ls_res = []
 	site = copy(ls_res_raw[0][0][0])
-	# print ls_res_raw
-	# print site
 	for res_raw in ls_res_raw:
 		res = []
 		if len(res_raw) < 8:
 			ls_enum = EnumArrg(res_raw)
-			# print 'raw is', res_raw
-			# print 'number of enumerates is ', len(ls_enum)
 			min_cost = 1000000
 			bsf = []
 			for enum in ls_enum:
@@ -44,21 +40,17 @@ def ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 					loc2 = GetLoc(node,ls_site,ls_spot,ls_shop)
 					o_graph.add_edge(res_raw[i][0],node,weight=Dist(loc1,loc2))
 		T = nx.minimum_spanning_tree(o_graph)
-		# print(sorted(T.edges(data=True)))
 		o_mgraph = 0
 		o_mgraph = nx.MultiGraph()
 		for i in range(0,len(res_raw)-1):
 			o_mgraph.add_node(res_raw[i][0])
 		for edge in T.edges(data=True):
 			o_mgraph.add_edge(edge[0],edge[1],weight = edge[2]['weight'])
-		# print 'all edges:'
-		# print o_mgraph.edges(data=True)
 		ls_to_match = []
 		for node in o_mgraph.nodes():
 			num_nbr = len(o_mgraph.neighbors(node))
 			if num_nbr%2 != 0:
 				ls_to_match.append(copy(node))
-		# print ls_to_match
 		path = []
 		if len(ls_to_match) < 8:
 			ls_match = MinPfctMatching(ls_to_match,ls_site,ls_spot,ls_shop)
@@ -90,11 +82,6 @@ def ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 			ls_res.append(copy(res_raw))
 		else:
 			ls_res.append(copy(res))
-
-			# print ls_match
-
-
-
 	return ls_res
 
 def BuildKNNGraph(site,ls_spot_per_site,ls_nbrs,temp_order,CAPACITY):
@@ -225,52 +212,15 @@ def EnumHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 		ls_enum = EnumArrg(res_raw)
 		# print 'raw is', res_raw
 		print 'number of enumerates is ', len(ls_enum)
-		# min_cost = 1000000
-		# bsf = []
-		# for enum in ls_enum:
-		# 	[cost] = ComputeTimeTbl([enum],ls_site,ls_spot,ls_shop)
-		# 	if cost['cost'] <min_cost:
-		# 		min_cost = copy(cost['cost'])
-		# 		bsf = []
-		# 		bsf = copy(enum)
-		# ls_res.append(copy(bsf))
-	return ls_res
-
-def FindNaiveAssign(site,o_graph,CAPACITY,temp_order):
-	ls_res = []
-	temp_graph = deepcopy(o_graph)
-	# GraphKNN(temp_graph,k,site.sid)
-	r = 0
-	while temp_graph.number_of_edges()>0:
-		res = []
-		# print 'round ',r,'................'
-		r = r + 1
-		# print temp_graph.number_of_edges()
-		nbr = GraphKNN(site.sid,temp_graph,1)[0][0]
-		res.append([copy(site.sid),0])
-		# print nbr
-		total_bag = 0
-		while total_bag + temp_order[nbr] <= CAPACITY:
-			res.append([copy(nbr),temp_order[nbr]])
-			# print 'nbr is ', nbr, 'bag is ', temp_order[nbr]
-			# print 'number of neighbors is ', temp_graph.neighbors(nbr)
-			if len(temp_graph.neighbors(nbr)) <= 1:
-				temp_graph.remove_node(nbr)
-				total_bag = copy(total_bag) + copy(temp_order[nbr])
-				break
-			total_bag = copy(total_bag) + copy(temp_order[nbr])
-			new_start = copy(nbr)
-			nbr = ''
-			ls_nbr = GraphKNN(new_start,temp_graph,2)
-			# print 'ls_nbr is ',ls_nbr
-			if ls_nbr[0][0] == site.sid:
-				nbr = copy(ls_nbr[1][0])
-			else:
-				nbr = copy(ls_nbr[0][0])
-			temp_graph.remove_node(new_start)
-		res.append([copy(site.sid),0])
-		ls_res.append(copy(res))
-		# print 'total_bag is ', total_bag
+		min_cost = 1000000
+		bsf = []
+		for enum in ls_enum:
+			[cost] = ComputeTimeTbl([enum],ls_site,ls_spot,ls_shop)
+			if cost['cost'] <min_cost:
+				min_cost = copy(cost['cost'])
+				bsf = []
+				bsf = copy(enum)
+		ls_res.append(copy(bsf))
 	return ls_res
 
 def FindADir(site,o_graph,CAPACITY,temp_order,ls_site,ls_spot,ls_shop):
@@ -311,6 +261,120 @@ def FindADir(site,o_graph,CAPACITY,temp_order,ls_site,ls_spot,ls_shop):
 			prevdir = ComputeNodeDirctn(site.sid,nbr,ls_site,ls_spot,ls_shop)
 		res.append([copy(site.sid),0])
 		ls_res.append(copy(res))
+	return ls_res
+
+def FindADirFar(site,o_graph,CAPACITY,temp_order,ls_site,ls_spot,ls_shop):
+	ls_res = []
+	temp_graph = deepcopy(o_graph)
+	# GraphKNN(temp_graph,k,site.sid)
+	r = 0
+	prevdir = 0.0
+	while temp_graph.number_of_edges()>0:
+		res = []
+		# print 'round ',r,'................'
+		r = r + 1
+		# print temp_graph.number_of_edges()
+		nbr = GraphKFN(site.sid,temp_graph,1)[0][0]
+		prevdir = ComputeNodeDirctn(site.sid,nbr,ls_site,ls_spot,ls_shop)
+		res.append([copy(site.sid),0])
+		# print nbr
+		total_bag = 0
+		while total_bag + temp_order[nbr] <= CAPACITY:
+			res.append([copy(nbr),temp_order[nbr]])
+			# print 'nbr is ', nbr, 'bag is ', temp_order[nbr]
+			# print 'number of neighbors is ', temp_graph.neighbors(nbr)
+			if len(temp_graph.neighbors(nbr)) <= 1:
+				temp_graph.remove_node(nbr)
+				total_bag = copy(total_bag) + copy(temp_order[nbr])
+				break
+			total_bag = copy(total_bag) + copy(temp_order[nbr])
+			new_start = copy(nbr)
+			nbr = ''
+			ls_nbr = GraphDirKNN(site.sid,new_start,temp_graph,2,prevdir,ls_site,ls_spot,ls_shop)
+			# print 'ls_nbr is ',ls_nbr
+			if ls_nbr[0][0] == site.sid:
+				nbr = copy(ls_nbr[1][0])
+			else:
+				nbr = copy(ls_nbr[0][0])
+			temp_graph.remove_node(new_start)
+			# print nbr
+			prevdir = ComputeNodeDirctn(site.sid,nbr,ls_site,ls_spot,ls_shop)
+		res.append([copy(site.sid),0])
+		ls_res.append(copy(res))
+	return ls_res
+
+def FindAFar(site,o_graph,CAPACITY,temp_order):
+	ls_res = []
+	temp_graph = deepcopy(o_graph)
+	# GraphKNN(temp_graph,k,site.sid)
+	r = 0
+	while temp_graph.number_of_edges()>0:
+		res = []
+		# print 'round ',r,'................'
+		r = r + 1
+		# print temp_graph.number_of_edges()
+		nbr = GraphKFN(site.sid,temp_graph,1)[0][0]
+		res.append([copy(site.sid),0])
+		# print nbr
+		total_bag = 0
+		while total_bag + temp_order[nbr] <= CAPACITY:
+			res.append([copy(nbr),temp_order[nbr]])
+			# print 'nbr is ', nbr, 'bag is ', temp_order[nbr]
+			# print 'number of neighbors is ', temp_graph.neighbors(nbr)
+			if len(temp_graph.neighbors(nbr)) <= 1:
+				temp_graph.remove_node(nbr)
+				total_bag = copy(total_bag) + copy(temp_order[nbr])
+				break
+			total_bag = copy(total_bag) + copy(temp_order[nbr])
+			new_start = copy(nbr)
+			nbr = ''
+			ls_nbr = GraphKNN(new_start,temp_graph,2)
+			# print 'ls_nbr is ',ls_nbr
+			if ls_nbr[0][0] == site.sid:
+				nbr = copy(ls_nbr[1][0])
+			else:
+				nbr = copy(ls_nbr[0][0])
+			temp_graph.remove_node(new_start)
+		res.append([copy(site.sid),0])
+		ls_res.append(copy(res))
+		# print 'total_bag is ', total_bag
+	return ls_res
+
+def FindNaiveAssign(site,o_graph,CAPACITY,temp_order):
+	ls_res = []
+	temp_graph = deepcopy(o_graph)
+	# GraphKNN(temp_graph,k,site.sid)
+	r = 0
+	while temp_graph.number_of_edges()>0:
+		res = []
+		# print 'round ',r,'................'
+		r = r + 1
+		# print temp_graph.number_of_edges()
+		nbr = GraphKNN(site.sid,temp_graph,1)[0][0]
+		res.append([copy(site.sid),0])
+		# print nbr
+		total_bag = 0
+		while total_bag + temp_order[nbr] <= CAPACITY:
+			res.append([copy(nbr),temp_order[nbr]])
+			# print 'nbr is ', nbr, 'bag is ', temp_order[nbr]
+			# print 'number of neighbors is ', temp_graph.neighbors(nbr)
+			if len(temp_graph.neighbors(nbr)) <= 1:
+				temp_graph.remove_node(nbr)
+				total_bag = copy(total_bag) + copy(temp_order[nbr])
+				break
+			total_bag = copy(total_bag) + copy(temp_order[nbr])
+			new_start = copy(nbr)
+			nbr = ''
+			ls_nbr = GraphKNN(new_start,temp_graph,2)
+			# print 'ls_nbr is ',ls_nbr
+			if ls_nbr[0][0] == site.sid:
+				nbr = copy(ls_nbr[1][0])
+			else:
+				nbr = copy(ls_nbr[0][0])
+			temp_graph.remove_node(new_start)
+		res.append([copy(site.sid),0])
+		ls_res.append(copy(res))
+		# print 'total_bag is ', total_bag
 	return ls_res
 
 def FindSpotPerSite(site,ls_spot,ls_order):
@@ -376,6 +440,17 @@ def GraphDirKNN(site,node,o_graph,k,prevdir,ls_site,ls_spot,ls_shop):
 	# print node, ':'
 	# print sorted(ls_nbr,key=lambda x:(x[1]))
 	return knn
+
+def GraphKFN(node,o_graph,k):
+	ls_nbr = []
+	kfn = []
+	ls_nbrnodes = o_graph.neighbors(node)
+	for nbrnode in ls_nbrnodes:
+		ls_nbr.append([copy(nbrnode),copy(o_graph[nbrnode][node]['weight'])])
+	# print ls_nbr
+	kfn = copy(sorted(ls_nbr,reverse=True,key=lambda x:(x[1]))[0:k])
+	# print kfn
+	return kfn
 
 def GraphKNN(node,o_graph,k):
 	ls_nbr = []
@@ -470,9 +545,6 @@ def PlotAssign(oplt,o_graph,ls_assign):
 	return
 
 def PlotGraph(o_graph,site,ls_spot):
-	# print o_graph.edges()
-	# print o_graph.nodes()
-	# print o_graph.node
 	min_size = 0
 	max_size = 140
 	min_r = 20
