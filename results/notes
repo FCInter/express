@@ -1,0 +1,12 @@
+1. Is it possible to find a lower bound on the optimal solution? I think we need a bound, referred to which we can estimate how good our solution is.
+
+2. Is there any other better method? Currently, for Hamilton Path we have almost done everything we can, unless we add more brute force steps, which is not recommended because it is too time consuming ------ but C language may help because is much faster than python.
+I think the next task is to find a better graph partition algorithm, because it is also essential to decide how the bags are distributed among senders. 
+
+3. OK. Then next we start to design evaluation method for solutions.
+Possible measures:
+1. The wasted capacity. WC = 140 * #senders - total_bag
+-------- minimizing this requires to minimize #senders
+2. The wasted travel. WT = total_travel - cost(MST)
+-------- minimizing this requires to minimize total_travel
+3. 

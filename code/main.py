@@ -40,10 +40,6 @@ def main():
 		ls_res_raw4 = FindADirFar(site,o_graph,CAPACITY,temp_order,ls_site,ls_spot,ls_shop)
 		# print len(ls_res_raw)
 		print 'The ' + str(i) + ' th site ..............'
-		# ls_trip1 = ComputeTimeTbl(ls_res_raw1,ls_site,ls_spot,ls_shop)
-		# ls_trip2 = ComputeTimeTbl(ls_res_raw2,ls_site,ls_spot,ls_shop)
-		# ls_trip3 = ComputeTimeTbl(ls_res_raw3,ls_site,ls_spot,ls_shop)
-		# ls_trip4 = ComputeTimeTbl(ls_res_raw4,ls_site,ls_spot,ls_shop)
 		tcost1 = 0
 		tcost2 = 0
 		tcost3 = 0
@@ -73,15 +69,16 @@ def main():
 			ls_res = copy(ls_res3)
 		else:
 			ls_res = copy(ls_res4)
-		# print ls_res
+		# for res in ls_res:
+		# 	print res
 		# break
 		PlotAssign(oplt,o_graph,ls_res)
-		oplt.savefig('../figures/site' + str(GetId(site.sid)+1) + 'graph.jpg',format = 'jpg')
+		oplt.savefig('../figures/site' + str(GetId(site.sid)+1) + 'zgraph.jpg',format = 'jpg')
 		oplt.clf()
 		total_worker = copy(total_worker) + len(ls_res)
 		cost = copy(cost) + min_cost
-			# if i == 0:
-			# 	break
+		# if i == 30:
+		# 	break
 	print 'total_worker is ',total_worker
 	print 'total cost is ', cost
 		# break
