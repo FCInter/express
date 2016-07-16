@@ -12,18 +12,20 @@ from numpy import mean, std, abs
 import matplotlib.pyplot as plt
 import networkx as nx
 import itertools
+from shapely.geometry import LineString as LS
 
 def ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 	ls_res = []
 	site = copy(ls_res_raw[0][0][0])
 	for res_raw in ls_res_raw:
 		res = []
-		if len(res_raw) < 8:
+		if len(res_raw) < 0:
 			ls_enum = EnumArrg(res_raw)
 			min_cost = 1000000
 			bsf = []
 			for enum in ls_enum:
 				[cost] = ComputeTimeTbl([enum],ls_site,ls_spot,ls_shop)
+				# print enum, cost['cost']
 				if cost['cost'] <min_cost:
 					min_cost = copy(cost['cost'])
 					bsf = []
@@ -33,8 +35,8 @@ def ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 		o_graph = 0
 		o_graph = nx.Graph()
 		for i in range(0,len(res_raw)-1):
-			o_graph.add_node(res_raw[i][0])
 			loc1 = GetLoc(res_raw[i][0],ls_site,ls_spot,ls_shop)
+			o_graph.add_node(res_raw[i][0],lng = loc1.lng, lat = loc1.lat, bag = copy(res_raw[i][1]))
 			for node in o_graph.nodes():
 				if node != res_raw[i][0]:
 					loc2 = GetLoc(node,ls_site,ls_spot,ls_shop)
@@ -75,13 +77,19 @@ def ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 							break
 					res.append([copy(loc),copy(bag)])
 		res.append([site,0])
+		new_res = []
+		new_res = RmCross(res,o_graph)
 		# print res
 		tcost1 = ComputeTimeTbl([res_raw],ls_site,ls_spot,ls_shop)
 		tcost2 = ComputeTimeTbl([res],ls_site,ls_spot,ls_shop)
-		if tcost1 < tcost2:
+		tcost3 = copy(tcost1) + copy(tcost2)
+		tcost3 = ComputeTimeTbl([new_res],ls_site,ls_spot,ls_shop)
+		if tcost1 == min([tcost1,tcost2,tcost3]):
 			ls_res.append(copy(res_raw))
-		else:
+		elif tcost2 == min([tcost1,tcost2,tcost3]):
 			ls_res.append(copy(res))
+		elif tcost3 == min([tcost1,tcost2,tcost3]):
+			ls_res.append(copy(new_res))
 	return ls_res
 
 def BuildKNNGraph(site,ls_spot_per_site,ls_nbrs,temp_order,CAPACITY):
@@ -190,6 +198,14 @@ def DirTwoPi(difflng,difflat):
 			dirctn = copy(dirraw)
 	return dirctn
 
+def ED(ls1,ls2):
+	dist = 0.0
+	# print ls1
+	# print ls2
+	for i in range(0,len(ls1)):
+		dist = copy(dist) + copy((copy(ls1[i]) - copy(ls2[i]))*(copy(ls1[i]) - copy(ls2[i])))
+	return dist
+
 def EnumArrg(ls):
 	ls_all_arrg = []
 	head = [ls[0]]
@@ -222,6 +238,21 @@ def EnumHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 				bsf = copy(enum)
 		ls_res.append(copy(bsf))
 	return ls_res
+
+def ExchangeEndPt(edge1,edge2,o_graph):
+	end11 = copy(edge1[0])
+	end12 = copy(edge1[1])
+	end21 = copy(edge2[0])
+	end22 = copy(edge2[1])
+	o_graph.remove_edge(end11,end12)
+	o_graph.remove_edge(end21,end22)
+	if nx.has_path(o_graph,end11,end21):
+		o_graph.add_edge(end11,end22)
+		o_graph.add_edge(end12,end21)
+	else:
+		o_graph.add_edge(end11,end21)
+		o_graph.add_edge(end12,end22)
+	return
 
 def FindADir(site,o_graph,CAPACITY,temp_order,ls_site,ls_spot,ls_shop):
 	ls_res = []
@@ -463,6 +494,37 @@ def GraphKNN(node,o_graph,k):
 	# print knn
 	return knn
 
+def IsInline(point,seg1,seg2):
+	distp1 = sqrt(ED(point,seg1))
+	distp2 = sqrt(ED(point,seg2))
+	len1 = sqrt(ED(seg1,seg2))
+	if abs(copy(len1) - copy(distp1) - copy(distp2)) < 0.0000000001:
+		return True
+	else:
+		return False
+	return False
+
+def IsIntersect(edge1,edge2,o_graph):
+	lng11 = o_graph.node[edge1[0]]['lng']
+	lng12 = o_graph.node[edge1[1]]['lng']
+	lng21 = o_graph.node[edge2[0]]['lng']
+	lng22 = o_graph.node[edge2[1]]['lng']
+	lat11 = o_graph.node[edge1[0]]['lat']
+	lat12 = o_graph.node[edge1[1]]['lat']
+	lat21 = o_graph.node[edge2[0]]['lat']
+	lat22 = o_graph.node[edge2[1]]['lat']
+	l1 = LS([(lng11,lat11),(lng12,lat12)])
+	l2 = LS([(lng21,lat21),(lng22,lat22)])
+	if l1.intersects(l2):
+		itsctpt = copy(list(l1.intersection(l2).coords)[0])
+		if IsInline(itsctpt,[lng11,lat11],[lng12,lat12]) and IsInline(itsctpt,[lng21,lat21],[lng22,lat22]):
+			return True
+		else:
+			return False
+	else:
+		return False
+	return False
+
 def KNNLoc(ls_loc,k):
 	num_loc = len(ls_loc)
 	ls_nbr = []
@@ -689,6 +751,89 @@ def ODDist(ls_order,ls_ori,ls_dest,*ls_ori2):
 	avg_dist = mean(ls_dist)
 	std_dist = std(ls_dist)
 	return [avg_dist,std_dist]
+
+def RmCross(res,o_graph):
+	new_res = []
+	toprint = 0
+	if 'B0816' in o_graph.nodes():
+		# print o_graph.nodes()
+		toprint = 1
+	i = 0
+	ls_edges = deepcopy(o_graph.edges())
+	siteid = copy(res[0][0])
+	sitebag = copy(res[0][1])
+	for edge in ls_edges:
+		o_graph.remove_edge(edge[0],edge[1])
+	# print o_graph.edges(data = True)
+	# print o_graph.nodes()
+	for i in range(0,len(res)-1):
+		# print res[i][0],res[i][1]
+		o_graph.add_edge(res[i][0],res[i+1][0])
+	# print 'BEFORE !!!!!!!!!!!!!!!!!!'
+	# print res
+	# print o_graph.edges()
+	# print o_graph.nodes(data=True)
+	isintsct = 1	
+	while(isintsct):
+		# print 'new round......'
+		# print o_graph.edges()
+		found = 0
+		for i in range(0,len(o_graph.edges())):
+			edge1 = copy(o_graph.edges()[i])
+			found = 0
+			for j in range(0,len(o_graph.edges())):
+				if i == j:
+					continue
+				edge2 = copy(o_graph.edges()[j])
+				if IsIntersect(edge1,edge2,o_graph):
+					if set(edge1).isdisjoint(edge2):
+						ExchangeEndPt(edge1,edge2,o_graph)
+						found = 1
+						break
+			if found == 1:
+				break
+		# print 'end of for...'
+		if found == 0:
+			isintsct = 0
+			# print 'No intersection!!!!!!!!!!'
+			# break
+		# else:
+		# 	print 'still intersecting....'
+	# new_res.append([siteid,sitebag])
+	# startid = copy(siteid)
+	# print 'before 2nd while loop...........'
+	# print o_graph.edge[startid].keys()[0]
+	# print siteid
+	# print '.................AFTER'
+	# print o_graph.edges()
+	if len(o_graph.edges()) == 1:
+		other = 0
+		for node in o_graph.nodes():
+			if node != siteid:
+				other = copy(node)
+				break
+		path = [(siteid,other),(other,siteid)]
+	else:
+		path = list(nx.eulerian_circuit(o_graph,source = siteid))
+	for segment in path:
+		new_res.append([segment[0],o_graph.node[segment[0]]['bag']])
+	new_res.append([siteid,sitebag])
+	# print 'PATH............'
+	# print path
+	# while(o_graph.edge[startid].keys()[0] != siteid):
+	# 	nextid = copy(o_graph.edge[startid].keys()[0])
+	# 	bag = copy(o_graph.node[nextid]['bag'])
+	# 	new_res.append([copy(nextid),copy(bag)])
+	# 	startid = copy(nextid)
+		# print startid
+	# print 'end of 2nd while loop.............'
+	# new_res.append([siteid,sitebag])
+	# print o_graph.edges()
+	# print new_res
+	if toprint:
+		# print o_graph.nodes()
+		print new_res
+	return new_res
 
 def Round(t):
 	if t - float(int(copy(t))) < 0.5:
