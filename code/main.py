@@ -25,7 +25,13 @@ def main():
 	num_dorder = len(ls_dorder)
 	total_worker = 0
 	cost = 0
+	istart = 32
+	iend = 33
 	for i in range(0,len(ls_site)):
+		if i < istart:
+			continue
+		if i >= iend:
+			break
 		site = copy(ls_site[i])
 		ls_spot_per_site = []
 		ls_res = []
@@ -77,8 +83,6 @@ def main():
 		oplt.clf()
 		total_worker = copy(total_worker) + len(ls_res)
 		cost = copy(cost) + min_cost
-		# if i == 30:
-		# 	break
 	print 'total_worker is ',total_worker
 	print 'total cost is ', cost
 		# break
