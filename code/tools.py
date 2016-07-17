@@ -79,17 +79,44 @@ def ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 		res.append([site,0])
 		new_res = []
 		new_res = RmCross(res,o_graph)
+		new_res_raw = []
+		new_res_raw = RmCross(res_raw,o_graph)
 		# print res
 		tcost1 = ComputeTimeTbl([res_raw],ls_site,ls_spot,ls_shop)
 		tcost2 = ComputeTimeTbl([res],ls_site,ls_spot,ls_shop)
-		tcost3 = copy(tcost1) + copy(tcost2)
+		# tcost3 = copy(tcost1) + copy(tcost2)
 		tcost3 = ComputeTimeTbl([new_res],ls_site,ls_spot,ls_shop)
-		if tcost1 == min([tcost1,tcost2,tcost3]):
-			ls_res.append(copy(res_raw))
-		elif tcost2 == min([tcost1,tcost2,tcost3]):
-			ls_res.append(copy(res))
-		elif tcost3 == min([tcost1,tcost2,tcost3]):
+		tcost4 = ComputeTimeTbl([new_res_raw],ls_site,ls_spot,ls_shop)
+		if tcost3[0]['cost'] == min([tcost1[0]['cost'],tcost2[0]['cost'],tcost3[0]['cost'],tcost4[0]['cost']]):
 			ls_res.append(copy(new_res))
+			# if 'B3681' in o_graph.nodes():
+			# 	print 'new_res win',new_res,min([tcost1[0]['cost'],tcost2[0]['cost'],tcost3[0]['cost']])
+			# 	print res,tcost2[0]['cost']
+		elif tcost4[0]['cost'] == min([tcost1[0]['cost'],tcost2[0]['cost'],tcost3[0]['cost'],tcost4[0]['cost']]):
+			ls_res.append(copy(new_res_raw))
+		elif tcost2[0]['cost'] == min([tcost1[0]['cost'],tcost2[0]['cost'],tcost3[0]['cost'],tcost4[0]['cost']]):
+			ls_res.append(copy(res))
+			# if 'B2350' in o_graph.nodes():
+			# 	print 'res win', res,min([tcost1[0]['cost'],tcost2[0]['cost'],tcost3[0]['cost']])
+			# if res != new_res:
+			# 	print res
+			# 	print new_res
+			# 	print 'tcost2 is ', tcost2[0]['cost'], ' tcost3 is ', tcost3[0]['cost']
+			# 	temp_dis = DistSum(res,ls_site,ls_spot,ls_shop)
+			# 	print 'total dist of res is ', temp_dis
+			# 	temp_dis = DistSum(new_res,ls_site,ls_spot,ls_shop)
+			# 	print 'total dist of new_res is ', temp_dis
+
+		elif tcost1[0]['cost'] == min([tcost1[0]['cost'],tcost2[0]['cost'],tcost3[0]['cost'],tcost4[0]['cost']]):
+			ls_res.append(copy(res_raw))
+			# if 'B3681' in o_graph.nodes():
+			# 	print 'res_raw win', res_raw,min([tcost1[0]['cost'],tcost2[0]['cost'],tcost3[0]['cost']])
+		# if 'B3681' in o_graph.nodes():
+		# 	print '***********************'
+		# 	print res, tcost2[0]['cost']
+		# 	print new_res, tcost3[0]['cost']
+		# 	print res_raw, tcost1[0]['cost']
+		# 	print '***********************'
 	return ls_res
 
 def BuildKNNGraph(site,ls_spot_per_site,ls_nbrs,temp_order,CAPACITY):
@@ -157,20 +184,6 @@ def ComputeTimeTbl(ls_trip,ls_site,ls_spot,ls_shop):
 		ls_cost.append(copy(table))
 	return ls_cost
 
-def Dist(p1,p2):
-	#return in km, no rounding
-	dist = 0.0
-	R = 6378137.0
-	lat1 = float(copy(p1.lat))
-	lat2 = float(copy(p2.lat))
-	lng1 = float(copy(p1.lng))
-	lng2 = float(copy(p2.lng))
-	dlat = float(lat1 - lat2) / 2.0
-	dlng = float(lng1 - lng2) / 2.0
-	dist = 2.0 * R * asin(sqrt( sin(pi*dlat/180.0)*sin(pi*dlat/180.0) + cos(pi*lat1/180.0)*cos(pi*lat2/180.0)*sin(pi*dlng/180.0)*sin(pi*dlng/180.0) ))
-	dist = copy(dist) / 1000.0
-	return dist
-
 def DirTwoPi(difflng,difflat):
 	dirctn = 0.0
 	if difflng == 0.0:
@@ -197,6 +210,36 @@ def DirTwoPi(difflng,difflat):
 		elif difflat > 0.0:
 			dirctn = copy(dirraw)
 	return dirctn
+
+def Dist(p1,p2):
+	#return in km, no rounding
+	dist = 0.0
+	R = 6378137.0
+	lat1 = float(copy(p1.lat))
+	lat2 = float(copy(p2.lat))
+	lng1 = float(copy(p1.lng))
+	lng2 = float(copy(p2.lng))
+	dlat = float(lat1 - lat2) / 2.0
+	dlng = float(lng1 - lng2) / 2.0
+	dist = 2.0 * R * asin(sqrt( sin(pi*dlat/180.0)*sin(pi*dlat/180.0) + cos(pi*lat1/180.0)*cos(pi*lat2/180.0)*sin(pi*dlng/180.0)*sin(pi*dlng/180.0) ))
+	dist = copy(dist) / 1000.0
+	return dist
+
+def DistSum(path,ls_site,ls_spot,ls_shop):
+	dist = 0.0
+	sumt = 0
+	for i in range(0,len(path)-1):
+		loc1 = 0
+		loc2 = 0
+		loc1 = GetLoc(path[i][0],ls_site,ls_spot,ls_shop)
+		loc2 = GetLoc(path[i+1][0],ls_site,ls_spot,ls_shop)
+		temp_dis = Dist(loc1,loc2)
+		t = Round(temp_dis/0.25)
+		print 'dist of this step is ' + str(temp_dis) + ' , round t is ' + str(t)
+		sumt = copy(sumt) + copy(t)
+		dist = copy(dist) + copy(temp_dis)
+	print 'sumt is ' +str(sumt)
+	return dist
 
 def ED(ls1,ls2):
 	dist = 0.0
@@ -755,7 +798,7 @@ def ODDist(ls_order,ls_ori,ls_dest,*ls_ori2):
 def RmCross(res,o_graph):
 	new_res = []
 	toprint = 0
-	if 'B0816' in o_graph.nodes():
+	if 'B' in o_graph.nodes():
 		# print o_graph.nodes()
 		toprint = 1
 	i = 0
@@ -774,6 +817,7 @@ def RmCross(res,o_graph):
 	# print o_graph.edges()
 	# print o_graph.nodes(data=True)
 	isintsct = 1	
+	ischange = 0
 	while(isintsct):
 		# print 'new round......'
 		# print o_graph.edges()
@@ -788,6 +832,8 @@ def RmCross(res,o_graph):
 				if IsIntersect(edge1,edge2,o_graph):
 					if set(edge1).isdisjoint(edge2):
 						ExchangeEndPt(edge1,edge2,o_graph)
+						# print 'Find intersection!!!!!!!!'
+						ischange = 1
 						found = 1
 						break
 			if found == 1:
@@ -806,6 +852,8 @@ def RmCross(res,o_graph):
 	# print siteid
 	# print '.................AFTER'
 	# print o_graph.edges()
+	if ischange == 0:
+		return res
 	if len(o_graph.edges()) == 1:
 		other = 0
 		for node in o_graph.nodes():
