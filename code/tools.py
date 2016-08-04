@@ -26,22 +26,25 @@ def AssignOTO(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoorder,ls_courier):
 	fulltask = 0
 	ComputeOTODDL(ls_otoodr_sort,ls_site,ls_spot,ls_shop)
 	ls_osite = GroupTasks(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoodr_sort)
-	print ls_osite[0].ls_dtask[0]
-	print ComputeTripCost(ls_osite[0].ls_dtask[0],ls_site,ls_spot,ls_shop,1)
+	# print ls_osite[0].ls_dtask[0]
+	# print ComputeTripVol(ls_osite[0].ls_dtask[0])
+	# print ComputeTripCost(ls_osite[0].ls_dtask[0],ls_site,ls_spot,ls_shop,1)
 	count = 0
 	for i in range(0,num_site):
 		num_dtask = len(ls_osite[i].ls_dtask)
 		num_oto = len(ls_osite[i].ls_oto)
 		if num_oto == 0:
 			for j in range(0,num_dtask):
-				ls_osite[i].ls_fulltask.append([[copy(i),copy(j)],copy(ls_osite[i].ls_dtask[j]),0])
+				ls_osite[i].ls_fulltask.append({"id":[copy(i),copy(j)],"task":copy(ls_osite[i].ls_dtask[j]),"assigned":0})
 				count = copy(count) + 1
 		else:
-			earliest = copy(ls_osite[i].ls_oto[0].ptime)
+			loc1 = Site(ls_osite[i].sid,ls_osite[i].lng,ls_osite[i].lat)
+			loc2 = GetLoc(ls_osite[i].ls_oto[0].shopid,ls_site,ls_spot,ls_shop)
+			earliest = copy(ls_osite[i].ls_oto[0].ptime) - TravelTime(loc1,loc2)
 			for j in range(0,num_dtask):
 				cost = ComputeTripCost(ls_osite[i].ls_dtask[j],ls_site,ls_spot,ls_shop)
 				if cost < earliest:
-					ls_osite[i].ls_fulltask.append([[copy(i),copy(j)],copy(ls_osite[i].ls_dtask[j]),0])
+					ls_osite[i].ls_fulltask.append({"id":[copy(i),copy(j)],"task":copy(ls_osite[i].ls_dtask[j]),"assigned":0})
 					count = copy(count) + 1
 	print 'count is ',count
 	crir_id = 0
@@ -51,13 +54,38 @@ def AssignOTO(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoorder,ls_courier):
 		num_fulltask = len(ls_osite[i].ls_fulltask)
 		count_assigned = 0
 		count_assigned_pp = 0
+		need_change = 1
 		if num_oto == 0:
-			if crir_id < num_crir:
-
+			for j in range(0,num_fulltask):
+				if crir_id < num_crir:
+					ls_courier[crir_id].volume = ComputeTripVol(ls_osite[i].ls_fulltask[j]["task"])
+					ls_osite[i].ls_fulltask[j]["assigned"] = 1
+					ls_courier[crir_id].ls_odr.append(copy(ls_osite[i].ls_fulltask[j]))
+					# [lng,lat] = GetLngLat(ls_osite[i].ls_fulltask[j]["task"][-2][0],ls_site,ls_spot,ls_shop)
+					ls_courier[crir_id].availng = ls_osite[i].lng
+					ls_courier[crir_id].availat = ls_osite[i].lat
+					ls_courier[crir_id].availt = ComputeTripCost(ls_osite[i].ls_fulltask[j]["task"],ls_site,ls_spot,ls_shop) + copy(ls_courier[crir_id].t)
+					ls_courier[crir_id].availv = 0
+					ls_courier[crir_id].lng = ls_osite[i].lng
+					ls_courier[crir_id].lat = ls_osite[i].lat
+					print 'sender ' + str(crir_id) + ' takes misson ' + str(i) + ', ' + str(j) + ' of site ' + str(ls_osite[i].sid) + ' at time ' + str(ls_courier[crir_id].t)
+					# print ls_osite[i].ls_fulltask[j]["task"]
+					# print ComputeTripVol(ls_osite[i].ls_fulltask[j]["task"])
+					# break
+					count_assigned_pp = copy(count_assigned_pp) + 1
+					ls_courier[crir_id].t = copy(ls_courier[crir_id].availt)
+					ls_courier[crir_id].lng = copy(ls_courier[crir_id].availng)
+					ls_courier[crir_id].lat = copy(ls_courier[crir_id].availat)
+					need_change = 1
+					if count_assigned_pp >= 3:
+						crir_id = copy(crir_id) + 1
+						count_assigned_pp = 0
+						need_change = 0
+			if need_change:
 				crir_id = copy(crir_id) + 1
 
-	# for i in range(0,len(ls_osite)):
-	# 	print ls_osite[i].sid
+		else:
+			
 	while(len(ls_asgn_odr) < num_order):
 		[isfound,order,task] = FindBestMatch(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoodr_sort,ls_asgn_dtsk,ls_asgn_odr)
 		break
@@ -285,6 +313,12 @@ def ComputeTripCost(trip,ls_site,ls_spot,ls_shop,*arg):
 			break
 	table['cost'] = copy(cost)
 	return cost
+
+def ComputeTripVol(trip):
+	volume = 0
+	for step in trip:
+		volume = copy(volume) + copy(int(step[1]))
+	return volume
 
 def DirTwoPi(difflng,difflat):
 	dirctn = 0.0

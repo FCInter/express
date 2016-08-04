@@ -78,6 +78,7 @@ class Courier(object):
 	volume = 0
 	lng = 0
 	lat = 0
+	t = 0
 	avait = 0
 	availng = 0
 	availat = 0
@@ -89,6 +90,7 @@ class Courier(object):
 		self.volume = 0
 		self.lng = 0
 		self.lat = 0
+		self.t = 0
 		self.avait = 0
 		self.availng = 0
 		self.availat = 0
