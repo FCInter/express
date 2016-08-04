@@ -5,6 +5,53 @@ import datetime
 import time
 from datetime import datetime
 from classes import *
+from tools import *
+from os.path import isfile, join
+
+def ExportDTaskToCSV(ls_dtask,ls_site):
+	for i in range(0,len(ls_dtask)):
+		filepath = ''
+		filepath = copy('../results/tempres/' + copy(ls_site[i].sid) + '/')
+		if not os.path.isdir(filepath):
+			os.makedirs(filepath)
+		for j in range(0,len(ls_dtask[i])):
+			filename = ''
+			filename = copy(filepath) + str(j) + '.csv'
+			f = open(filename,'a')
+			writer = csv.writer(f)
+			writer.writerows(ls_dtask[i][j])
+			f.close()
+	return
+
+def LoadDTaskFmCSV(srcpath,ls_site,ls_spot,ls_shop):
+	ls_dtask = []
+	ls_sitename = sorted(os.listdir(srcpath))
+	num_site = len(ls_sitename)
+	for i in range(0,num_site):
+		# [lng,lat] = GetLngLat(ls_sitename[i],ls_site,ls_spot,ls_shop)
+		ls_this = []
+		# osite = TaskPersite(ls_sitename[i],lng,lat)
+		# print osite.sid,osite.lng,osite.lat
+		mypath = ''
+		mypath = srcpath + copy(ls_sitename[i]) + '/'
+		onlyfiles = [f for f in os.listdir(mypath) if isfile(join(mypath, f))]
+		num_file = len(onlyfiles)
+		for j in range(0,num_file):
+			filename = copy(mypath) + copy(onlyfiles[j])
+			# print filename
+			f = open(filename,'rb')
+			rdr = csv.reader(f)
+			ls_this.append(list(rdr))
+			# osite.ls_dtask.append(list(rdr))
+			f.close()
+		# print ls_this
+		# print len(ls_this)
+		ls_dtask.append(ls_this)
+		# print osite.ls_dtask
+		# print len(osite.ls_dtask)
+		# break
+
+	return ls_dtask
 
 def LoadAll():
 	fname1 = '../data/1.csv'
@@ -115,5 +162,4 @@ def LoadCourier(filename):
 		x = Courier(cid)
 		ls_courier.append(x)
 	return ls_courier
-
 

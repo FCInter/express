@@ -13,6 +13,62 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import itertools
 from shapely.geometry import LineString as LS
+import operator
+
+def AssignOTO(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoorder,ls_courier):
+	ls_fulltask = []
+	ls_otoodr_sort = sorted(ls_otoorder, key = operator.attrgetter('ptime'))
+	ls_asgn_odr = []
+	ls_asgn_dtsk = []
+	num_order = len(ls_otoodr_sort)
+	num_site = len(ls_site)
+	ls_pure_oto = []
+	fulltask = 0
+	ComputeOTODDL(ls_otoodr_sort,ls_site,ls_spot,ls_shop)
+	ls_osite = GroupTasks(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoodr_sort)
+	print ls_osite[0].ls_dtask[0]
+	print ComputeTripCost(ls_osite[0].ls_dtask[0],ls_site,ls_spot,ls_shop,1)
+	count = 0
+	for i in range(0,num_site):
+		num_dtask = len(ls_osite[i].ls_dtask)
+		num_oto = len(ls_osite[i].ls_oto)
+		if num_oto == 0:
+			for j in range(0,num_dtask):
+				ls_osite[i].ls_fulltask.append([[copy(i),copy(j)],copy(ls_osite[i].ls_dtask[j]),0])
+				count = copy(count) + 1
+		else:
+			earliest = copy(ls_osite[i].ls_oto[0].ptime)
+			for j in range(0,num_dtask):
+				cost = ComputeTripCost(ls_osite[i].ls_dtask[j],ls_site,ls_spot,ls_shop)
+				if cost < earliest:
+					ls_osite[i].ls_fulltask.append([[copy(i),copy(j)],copy(ls_osite[i].ls_dtask[j]),0])
+					count = copy(count) + 1
+	print 'count is ',count
+	crir_id = 0
+	num_crir = len(ls_courier)
+	for i in range(0,num_site):
+		num_oto = len(ls_osite[i].ls_oto)
+		num_fulltask = len(ls_osite[i].ls_fulltask)
+		count_assigned = 0
+		count_assigned_pp = 0
+		if num_oto == 0:
+			if crir_id < num_crir:
+
+				crir_id = copy(crir_id) + 1
+
+	# for i in range(0,len(ls_osite)):
+	# 	print ls_osite[i].sid
+	while(len(ls_asgn_odr) < num_order):
+		[isfound,order,task] = FindBestMatch(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoodr_sort,ls_asgn_dtsk,ls_asgn_odr)
+		break
+		if isfound:
+			fulltask = ExpandTask(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoodr_sort,ls_asgn_dtsk,ls_asgn_odr)
+			ls_fulltask.append(copy(fulltask))
+		else:
+			ls_pure_oto = AssignPureOTO(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoodr_sort,ls_asgn_dtsk,ls_asgn_odr)
+
+
+	return [ls_fulltask,ls_pure_oto]
 
 def ApprxHamilt(ls_res_raw,ls_site,ls_spot,ls_shop):
 	ls_res = []
@@ -154,6 +210,20 @@ def ComputeNodeDirctn(p1,p2,ls_site,ls_spot,ls_shop):
 	[lng2,lat2] = GetLngLat(p2,ls_site,ls_spot,ls_shop)
 	return ComputeCoorDirctn(lng1,lat1,lng2,lat2)
 
+def ComputeOTODDL(ls_otoorder,ls_site,ls_spot,ls_shop):
+	num_order = len(ls_otoorder)
+	for i in range(0,num_order):
+		order = copy(ls_otoorder[i])
+		loc1 = GetLoc(order.shopid,ls_site,ls_spot,ls_shop)
+		loc2 = GetLoc(order.spotid,ls_site,ls_spot,ls_shop)
+		trvlt = TravelTime(loc1,loc2)
+		ls_otoorder[i].ddl = copy(ls_otoorder[i].dtime) - copy(trvlt)
+		if ls_otoorder[i].ddl < ls_otoorder[i].ptime:
+			# print 'ddl should have been ', ls_otoorder[i].ddl
+			ls_otoorder[i].ddl = copy(ls_otoorder[i].ptime)
+			# print ls_otoorder[i].oid, ls_otoorder[i].ptime,ls_otoorder[i].dtime,ls_otoorder[i].ddl
+	return
+
 def ComputeTimeTbl(ls_trip,ls_site,ls_spot,ls_shop):
 	timetable = []
 	timestamp = 0
@@ -183,6 +253,38 @@ def ComputeTimeTbl(ls_trip,ls_site,ls_spot,ls_shop):
 		table['cost'] = copy(cost)
 		ls_cost.append(copy(table))
 	return ls_cost
+
+def ComputeTripCost(trip,ls_site,ls_spot,ls_shop,*arg):
+	prev = 0
+	prev = GetLoc(copy(trip[0][0]),ls_site,ls_spot,ls_shop)
+	table = {}
+	table['trip'] = copy(trip)
+	cost = 0
+	length = len(trip)
+	i = 1
+	isbreak = 0
+	if len(arg) > 0:
+		isbreak = arg[0]
+	for step in trip:
+		locid = copy(step[0])
+		bag = copy(step[1])
+		loc = 0
+		loc = GetLoc(locid,ls_site,ls_spot,ls_shop)
+		# print step
+		t_travel = TravelTime(prev,loc)
+		t_proc = ProcTime(bag)
+		if bag == 0:
+			t_proc = 0
+		# print prev.sid,locid,bag
+		prev = 0
+		prev = GetLoc(locid,ls_site,ls_spot,ls_shop)
+		# print 'travel time: ', t_travel, 'process time: ',t_proc
+		cost = copy(cost) + copy(t_travel) + copy(t_proc)
+		i = copy(i) + 1
+		if i > length - isbreak:
+			break
+	table['cost'] = copy(cost)
+	return cost
 
 def DirTwoPi(difflng,difflat):
 	dirctn = 0.0
@@ -414,6 +516,90 @@ def FindAFar(site,o_graph,CAPACITY,temp_order):
 		# print 'total_bag is ', total_bag
 	return ls_res
 
+def FindBestMatch(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoodr_sort,ls_asgn_dtsk,ls_asgn_odr):
+	isfound = 0
+	tarorder = 0
+	tartask = 0
+	num_order = len(ls_otoodr_sort)
+	num_site = len(ls_dtask)
+	for i in range(0,num_site):
+		num_dtask = len(ls_dtask[i])
+		# for j in range(0,num_dtask):
+		# 	print ls_dtask[i][j]
+
+		break
+	# for i in range(0,num_order):
+	# 	if i in ls_asgn_odr:
+	# 		continue
+	# 	order = copy(ls_otoodr_sort[i])
+	# 	sloc = GetLoc(order.shopid,ls_site,ls_spot,ls_shop)
+
+
+	return [isfound,tarorder,tartask]
+
+def FindDTasks(ls_site,ls_spot,ls_shop,istart,iend,ls_dorder,CAPACITY):
+	total_worker = 0
+	cost = 0
+	ls_dtask = []
+	for i in range(0,len(ls_site)):
+		if i < istart:
+			continue
+		if i >= iend:
+			break
+		site = copy(ls_site[i])
+		ls_spot_per_site = []
+		ls_res = []
+		temp_order = {}
+		[ls_spot_per_site,temp_order] = FindSpotPerSite(site,ls_spot,ls_dorder)
+		ls_nbrs = KNNLoc(ls_spot_per_site,40)
+		o_graph = BuildKNNGraph(site,ls_spot_per_site,ls_nbrs,temp_order,CAPACITY)
+		oplt = PlotGraph(o_graph,site,ls_spot)
+		ls_res_raw1 = FindNaiveAssign(site,o_graph,CAPACITY,temp_order)
+		ls_res_raw2 = FindAFar(site,o_graph,CAPACITY,temp_order)
+		ls_res_raw3 = FindADir(site,o_graph,CAPACITY,temp_order,ls_site,ls_spot,ls_shop)
+		ls_res_raw4 = FindADirFar(site,o_graph,CAPACITY,temp_order,ls_site,ls_spot,ls_shop)
+		# print len(ls_res_raw)
+		print 'The ' + str(i) + ' th site ..............'
+		tcost1 = 0
+		tcost2 = 0
+		tcost3 = 0
+		tcost4 = 0
+		ls_res1 = ApprxHamilt(ls_res_raw1,ls_site,ls_spot,ls_shop)
+		ls_res2 = ApprxHamilt(ls_res_raw2,ls_site,ls_spot,ls_shop)
+		ls_res3 = ApprxHamilt(ls_res_raw3,ls_site,ls_spot,ls_shop)
+		ls_res4 = ApprxHamilt(ls_res_raw4,ls_site,ls_spot,ls_shop)
+		ls_trip1 = ComputeTimeTbl(ls_res1,ls_site,ls_spot,ls_shop)
+		ls_trip2 = ComputeTimeTbl(ls_res2,ls_site,ls_spot,ls_shop)
+		ls_trip3 = ComputeTimeTbl(ls_res3,ls_site,ls_spot,ls_shop)
+		ls_trip4 = ComputeTimeTbl(ls_res4,ls_site,ls_spot,ls_shop)
+		for trip in ls_trip1:
+			tcost1 = copy(tcost1) + copy(trip['cost'])
+		for trip in ls_trip2:
+			tcost2 = copy(tcost2) + copy(trip['cost'])
+		for trip in ls_trip3:
+			tcost3 = copy(tcost3) + copy(trip['cost'])
+		for trip in ls_trip4:
+			tcost4 = copy(tcost4) + copy(trip['cost'])
+		min_cost = min([tcost1,tcost2,tcost3,tcost4])
+		if tcost1 == min_cost:
+			ls_res = copy(ls_res1)
+		elif tcost2 == min_cost:
+			ls_res = copy(ls_res2)
+		elif tcost3 == min_cost:
+			ls_res = copy(ls_res3)
+		else:
+			ls_res = copy(ls_res4)
+		# for res in ls_res:
+		# 	print res
+		# break
+		PlotAssign(oplt,o_graph,ls_res)
+		oplt.savefig('../figures/site' + str(GetId(site.sid)+1) + 'zgraph.jpg',format = 'jpg')
+		oplt.clf()
+		ls_dtask.append(copy(ls_res))
+		total_worker = copy(total_worker) + len(ls_res)
+		cost = copy(cost) + min_cost
+	return ls_dtask
+
 def FindNaiveAssign(site,o_graph,CAPACITY,temp_order):
 	ls_res = []
 	temp_graph = deepcopy(o_graph)
@@ -536,6 +722,32 @@ def GraphKNN(node,o_graph,k):
 	knn = copy(sorted(ls_nbr,key=lambda x:(x[1]))[0:k])
 	# print knn
 	return knn
+
+def GroupTasks(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoorder):
+	num_site = len(ls_dtask)
+	num_oto = len(ls_otoorder)
+	osite = 0
+	ls_osite = []
+	for i in range(0,num_site):
+		osite = 0
+		num_dtask = len(ls_dtask[i])
+		[lng, lat] = GetLngLat(ls_dtask[i][0][0][0],ls_site,ls_spot,ls_shop)
+		osite = 0
+		osite = TaskPersite(ls_dtask[i][0][0][0],lng,lat)
+		for j in range(0,num_dtask):
+			osite.ls_dtask.append(ls_dtask[i][j])
+		ls_osite.append(copy(osite))
+	for i in range(0,num_oto):
+		s_loc = GetLoc(copy(ls_otoorder[i].shopid),ls_site,ls_spot,ls_shop)
+		mindist = 10000000
+		id_bsf = -1
+		for j in range(0,num_site):
+			temp_dis = Dist(s_loc,ls_osite[j])
+			if temp_dis < mindist:
+				mindist = copy(temp_dis)
+				id_bsf = copy(j)
+		ls_osite[id_bsf].ls_oto.append(copy(ls_otoorder[i]))
+	return ls_osite
 
 def IsInline(point,seg1,seg2):
 	distp1 = sqrt(ED(point,seg1))
@@ -897,3 +1109,4 @@ def TravelTime(p1,p2):
 	t = dist / speed
 	t = Round(copy(t))
 	return t
+
