@@ -31,14 +31,14 @@ def AssignOTO(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoorder,ls_courier):
 	# print ComputeTripCost(ls_osite[0].ls_dtask[0],ls_site,ls_spot,ls_shop,1)
 	count = 0
 	count_not = 0
-	for i in range(0,num_site):
-		num_dtask = len(ls_osite[i].ls_dtask)
-		num_oto = len(ls_osite[i].ls_oto)
-		if num_oto == 0:
-			for j in range(0,num_dtask):
-				ls_osite[i].ls_fulltask.append({"id":[copy(i),copy(j)],"task":copy(ls_osite[i].ls_dtask[j]["task"]),"assigned":0})
-				count = copy(count) + 1
-			ls_osite[i].ls_dtask = []
+	# for i in range(0,num_site):
+	# 	num_dtask = len(ls_osite[i].ls_dtask)
+	# 	num_oto = len(ls_osite[i].ls_oto)
+	# 	if num_oto == 0:
+	# 		for j in range(0,num_dtask):
+	# 			ls_osite[i].ls_fulltask.append({"id":[copy(i),copy(j)],"task":copy(ls_osite[i].ls_dtask[j]["task"]),"assigned":0})
+	# 			count = copy(count) + 1
+	# 		ls_osite[i].ls_dtask = []
 		# else:
 		# 	loc1 = Site(ls_osite[i].sid,ls_osite[i].lng,ls_osite[i].lat)
 		# 	loc2 = GetLoc(ls_osite[i].ls_oto[0][0].shopid,ls_site,ls_spot,ls_shop)
@@ -59,51 +59,16 @@ def AssignOTO(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoorder,ls_courier):
 		# 		if isfound == 0:
 		# 			ls_osite[i].ls_dtask.append(copy(templs[j]))
 		# 			count_not = copy(count_not) + 1
-	print 'count is ',count, 'count_not is ', count_not
+	# print 'count is ',count, 'count_not is ', count_not
+
 	crir_id = 0
 	num_crir = len(ls_courier)
+
 	count_taken = 0
-	# for i in range(0,num_site):
-	# 	num_oto = len(ls_osite[i].ls_oto)
-	# 	if num_oto > 0:
-	# 		continue
-	# 	num_fulltask = len(ls_osite[i].ls_fulltask)
-	# 	count_assigned = 0
-	# 	count_assigned_pp = 0
-	# 	need_change = 1
-	# 	for j in range(0,num_fulltask):
-	# 		if crir_id < num_crir:
-	# 			ls_courier[crir_id].volume = ComputeTripVol(ls_osite[i].ls_fulltask[j]["task"])
-	# 			ls_osite[i].ls_fulltask[j]["assigned"] = 1
-	# 			ls_courier[crir_id].ls_odr.append(copy(ls_osite[i].ls_fulltask[j]))
-	# 			# [lng,lat] = GetLngLat(ls_osite[i].ls_fulltask[j]["task"][-2][0],ls_site,ls_spot,ls_shop)
-	# 			ls_courier[crir_id].availng = ls_osite[i].lng
-	# 			ls_courier[crir_id].availat = ls_osite[i].lat
-	# 			ls_courier[crir_id].availt = ComputeTripCost(ls_osite[i].ls_fulltask[j]["task"],ls_site,ls_spot,ls_shop) + copy(ls_courier[crir_id].t)
-	# 			ls_courier[crir_id].availv = 0
-	# 			ls_courier[crir_id].lng = ls_osite[i].lng
-	# 			ls_courier[crir_id].lat = ls_osite[i].lat
-	# 			# print 'sender ' + str(crir_id) + ' takes misson ' + str(i) + ', ' + str(j) + ' of site ' + str(ls_osite[i].sid) + ' at time ' + str(ls_courier[crir_id].t)
-	# 			count_taken = copy(count_taken) + 1
-	# 			# print ls_osite[i].ls_fulltask[j]["task"]
-	# 			# print ComputeTripVol(ls_osite[i].ls_fulltask[j]["task"])
-	# 			# break
-	# 			count_assigned_pp = copy(count_assigned_pp) + 1
-	# 			ls_courier[crir_id].t = copy(ls_courier[crir_id].availt)
-	# 			ls_courier[crir_id].lng = copy(ls_courier[crir_id].availng)
-	# 			ls_courier[crir_id].lat = copy(ls_courier[crir_id].availat)
-	# 			need_change = 1
-	# 			if count_assigned_pp >= 3:
-	# 				crir_id = copy(crir_id) + 1
-	# 				count_assigned_pp = 0
-	# 				need_change = 0
-	# 	if need_change:
-	# 		crir_id = copy(crir_id) + 1
-	# print 'In total, ' + str(count_taken) + ' dtasks have been taken'
 	count_oto_notassigned = 0
 	for i in range(0,num_site):
-		# if i < 8:
-		# 	continue
+		if i < 6:
+			continue
 		if i > 10:
 			break
 		num_oto = len(ls_osite[i].ls_oto)
@@ -114,132 +79,239 @@ def AssignOTO(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoorder,ls_courier):
 		if num_dtask == 0:
 			print 'NO dtasks!!!!!!!!!!'
 			continue
-		for j in range(0,num_oto):
-			# print 'The ' + str(j) + ' th oto of site ' + str(i) + '....'
-			mindist = 10000000
-			bsf = -1
-			bspos = -1
-			for k in range(0,num_dtask):
-				[tempdis,posinsrt] = DistubOTODTask(ls_osite[i].ls_oto[j],ls_osite[i].ls_dtask[k],ls_site,ls_spot,ls_shop)
-				# print ls_osite[i].ls_dtask[k]
-				# print ls_osite[i].ls_oto[j][0].shopid,ls_osite[i].ls_oto[j][0].spotid
-				# print tempdis,posinsrt
-				# break
-				if tempdis < mindist:
-					if tempdis > 0:
-						bsf = copy(k)
-						# tempdis = copy(mindist)
-						mindist = copy(tempdis)
-						bspos = copy(posinsrt)
-			if bsf >= 0:
-				templs = deepcopy(ls_osite[i].ls_dtask[bsf])
-				# print ls_osite[i].ls_oto[j][1], 'pos to insert ', posinsrt
-				ls_osite[i].ls_dtask[bsf] = {}
-				ls_osite[i].ls_dtask[bsf] = InsertOTODTask(ls_osite[i].ls_oto[j],bspos,templs,ls_site,ls_spot,ls_shop)
-				# print ls_osite[i].ls_dtask[bsf][0][0]
-				if 'S' in ls_osite[i].ls_dtask[bsf]["task"][0][0]:
-					print bspos
-					print ls_osite[i].ls_dtask[bsf]["task"][0][0]
-				# print templs
-				# print ls_osite[i].ls_dtask[bsf]
-				# print ls_osite[i].ls_oto[j][1]
-			# break
-		# break
-		templs = deepcopy(ls_osite[i].ls_oto)
-		ls_osite[i].ls_oto = []
-		ls_osite[i].ls_oto = [x for x in templs if x[1] == 0]
-		count_crir_this_site = 0
-		ls_crir_this_site = []
-		for j in range(0,num_dtask):
-			if ls_osite[i].ls_dtask[j]["hasoto"] == 1:
-				if crir_id < num_crir:
-					# print 'i is ' + str(i) + ' j is ' + str(j)
-					AssignTOCrir(ls_osite[i].ls_dtask[j],ls_courier,crir_id,ls_site,ls_spot,ls_shop)
-					print 'The ' + str(j) + ' th task of site ' + str(i) + ' is assigned to courier ' + str(crir_id)
-					count_crir_this_site = copy(count_crir_this_site) + 1
-					ls_crir_this_site.append(copy(crir_id))
-					crir_id = copy(crir_id) + 1
-				else:
-					while (1):
-						print 'crir is not enough!!!'
 
-		templs = deepcopy(ls_osite[i].ls_dtask)
-		ls_osite[i].ls_dtask = []
-		ls_osite[i].ls_dtask = [x for x in templs if x["assigned"] == 0]
-		num_dtask = len(ls_osite[i].ls_dtask)
-		count_appended = 0
-		if count_crir_this_site == 0:
-			# count_crir_this_site = copy(num_dtask)/2
+		ls_crir_this_site = []
+		while num_oto > 0:
+			ddl_curr = ls_osite[i].ls_oto[-1][0].ddl
+			print 'ddl of this site is ' + str(ddl_curr)
+			if crir_id >= num_crir:
+				while(1):
+					print 'no more crir !!!!!!!!!'
+			id_nrst_dtsk = FindNrstDTaskOTO(ls_osite[i].ls_oto[-1][0],ls_osite[i].ls_dtask,ls_site,ls_spot,ls_shop)
+			# if id_nrst_dtsk < 0 or id_nrst_dtsk >= len(ls_osite[i].ls_dtask):
+			# 	print 'id_nrst_dtsk is ' + str(id_nrst_dtsk) + ' while number of dtasks is ' + str(len(ls_osite[i].ls_dtask))
+			if len(ls_osite[i].ls_dtask) == 0:
+				for j in range(0,num_oto):
+					mindist = 10000000
+					bsf_crir = -1
+					bsf_tsk = -1
+					bspos = -1
+					# print ls_osite[i].ls_oto[j][0].ptime,ls_osite[i].ls_oto[j][0].ddl,ls_osite[i].ls_oto[j][0].dtime
+					for k in range(0,len(ls_crir_this_site)):
+						temp_crir_id = copy(ls_crir_this_site[k])
+						# print ls_courier[temp_crir_id].avait
+						# print len(ls_courier[temp_crir_id].ls_odr)
+						[temptsk,temp_dis,posinsrt] = DistubOTOCourierMQ(ls_osite[i].ls_oto[j],ls_courier[temp_crir_id],ls_site,ls_spot,ls_shop)
+						# print [temptsk,temp_dis,posinsrt]
+						if temp_dis < mindist:
+							if temptsk >= 0:
+								# print 'changing........'
+								bsf_tsk = copy(temptsk)
+								bsf_crir = copy(k)
+								mindist = copy(tempdis)
+								bspos = copy(posinsrt)
+					if bsf_tsk >= 0:
+						# print 'inserting.........................'
+						templs = deepcopy(ls_courier[bsf_crir].ls_odr[bsf_tsk])
+						ls_courier[bsf_crir].ls_odr[bsf_tsk] = {}
+						ls_courier[bsf_crir].ls_odr[bsf_tsk] = InsertOTODTask(ls_osite[i].ls_oto[j],bspos,templs,ls_site,ls_spot,ls_shop)
+						ls_dtask_return = []
+						templs = []
+						[ls_dtask_return,templs] = ReScheduleCourier(ls_courier[bsf_crir],ls_site,ls_spot,ls_shop,ddl_curr)
+						ls_courier[bsf_crir].ls_odr = []
+						ls_courier[bsf_crir].ls_odr = deepcopy(templs)
+						for dreturn in ls_dtask_return:
+							ls_osite[i].ls_dtask.append(deepcopy(dreturn))
+				templs = deepcopy(ls_osite[i].ls_oto)
+				ls_osite[i].ls_oto = []
+				ls_osite[i].ls_oto = [x for x in templs if x[1] == 0]
+				num_oto = len(ls_osite[i].ls_oto)
+				print 'Still ' + str(num_oto) + 'remaining !!!!!!!!!'
+				continue
+
+			cost_nd = ComputeTripCost(ls_osite[i].ls_dtask[id_nrst_dtsk]["task"],ls_site,ls_spot,ls_shop,1)
+			ls_crir_this_site.append(copy(crir_id))
 			for j in range(0,num_dtask):
-				# if j == count_crir_this_site:
-				# 	break
-				AssignTOCrir(ls_osite[i].ls_dtask[j],ls_courier,crir_id,ls_site,ls_spot,ls_shop)
-				count_crir_this_site = copy(count_crir_this_site) + 1
-				ls_crir_this_site.append(copy(crir_id))
-				crir_id = copy(crir_id) + 1
-				if j >= copy(num_dtask/2):
+				if j == id_nrst_dtsk:
+					continue
+				if ls_courier[crir_id].avait < ddl_curr and ls_courier[crir_id].avait + cost_nd >= ddl_curr:
 					break
-				if crir_id >= num_crir:
-					while (1):
-						print 'crir is not enough!!!'
+				AssignTOCrir(ls_osite[i].ls_dtask[j],ls_courier,crir_id,ls_site,ls_spot,ls_shop)
+			AssignTOCrir(ls_osite[i].ls_dtask[id_nrst_dtsk],ls_courier,crir_id,ls_site,ls_spot,ls_shop)
 			templs = deepcopy(ls_osite[i].ls_dtask)
 			ls_osite[i].ls_dtask = []
 			ls_osite[i].ls_dtask = [x for x in templs if x["assigned"] == 0]
 			num_dtask = len(ls_osite[i].ls_dtask)
-		for j in range(0,num_dtask):
-			# print 'i is ' + str(i) + ' j is ' + str(j) + ' count_crir_this_site is ' + str(count_crir_this_site) + ', |' + str(len(ls_crir_this_site))
-			# print len(ls_osite), len(ls_osite[i].ls_dtask)
-			AssignTOCrir(ls_osite[i].ls_dtask[j],ls_courier,ls_crir_this_site[count_appended],ls_site,ls_spot,ls_shop)
-			count_appended = copy(count_appended) + 1
-			if count_appended == count_crir_this_site:
-				break
-		templs = deepcopy(ls_osite[i].ls_dtask)
-		ls_osite[i].ls_dtask = []
-		ls_osite[i].ls_dtask = [x for x in templs if x["assigned"] == 0]
-		num_dtask = len(ls_osite[i].ls_dtask)
-		num_oto = len(ls_osite[i].ls_oto)
-		if num_oto == 0:
-			continue
-		for j in range(0,num_oto):
-			mindist = 10000000
-			bsf_crir = -1
-			bspos = -1
-			bsf_tsk = -1
-			for k in range(0,count_crir_this_site):
-				[temptsk,tempdis,posinsrt] = DistubOTOCourier(ls_osite[i].ls_oto[j],ls_courier[ls_crir_this_site[k]],ls_site,ls_spot,ls_shop)
-				if tempdis < mindist:
-					if temptsk >= 0:
-						bsf_tsk = copy(temptsk)
-						bsf_crir = copy(ls_crir_this_site[k])
-						bspos = copy(posinsrt)
-						mindist = copy(tempdis)
-			if bsf_crir >= 0:
-				templs = deepcopy(ls_courier[bsf_crir].ls_odr[bsf_tsk])
-				ls_courier[bsf_crir].ls_odr[bsf_tsk] = {}
-				ls_courier[bsf_crir].ls_odr[bsf_tsk] = InsertOTODTask(ls_osite[i].ls_oto[j],bspos,templs,ls_site,ls_spot,ls_shop)
-		templs = deepcopy(ls_osite[i].ls_oto)
-		ls_osite[i].ls_oto = []
-		ls_osite[i].ls_oto = [x for x in templs if x[1] == 0]
+			for j in range(0,num_oto):
+				mindist = 10000000
+				[temptsk,tempdis,posinsrt] = DistubOTOCourier(ls_osite[i].ls_oto[j],ls_courier[crir_id],ls_site,ls_spot,ls_shop)
+				if temptsk >= 0:
+					templs = deepcopy(ls_courier[crir_id].ls_odr[temptsk])
+					ls_courier[crir_id].ls_odr[temptsk] = {}
+					ls_courier[crir_id].ls_odr[temptsk] = InsertOTODTask(ls_osite[i].ls_oto[j],posinsrt,templs,ls_site,ls_spot,ls_shop)
+					ls_dtask_return = []
+					templs = []
+					[ls_dtask_return,templs] = ReScheduleCourier(ls_courier[crir_id],ls_site,ls_spot,ls_shop,ddl_curr)
+					if len(ls_dtask_return) > 0:
+						ls_courier[crir_id].ls_odr = []
+						ls_courier[crir_id].ls_odr = deepcopy(templs)
+						for dreturn in ls_dtask_return:
+							ls_osite[i].ls_dtask.append(deepcopy(dreturn))
+			templs = deepcopy(ls_osite[i].ls_oto)
+			ls_osite[i].ls_oto = []
+			ls_osite[i].ls_oto = [x for x in templs if x[1] == 0]
+			num_oto = len(ls_osite[i].ls_oto)
+			print 'Still ' + str(num_oto) + 'remaining !!!!!!!!!'
+			f = open('../results/' + str(ls_osite[i].sid) + '.csv','a')
+			writer = csv.writer(f)
+			writer.writerow(['new crir'])
+			# stime = int(copy(ls_courier[crir_id].ls_odr[0]["starttime"]))
+			# writer.writerow([stime,copy(ls_courier[crir_id].ls_odr[0]["task"][0])])
+			for p in range(0,len(ls_courier[crir_id].ls_odr)):
+				writer.writerow(['new task..............'])
+				length = len(ls_courier[crir_id].ls_odr[p]["task"])
+				stime = int(copy(ls_courier[crir_id].ls_odr[p]["starttime"]))
+				writer.writerow([stime,copy(ls_courier[crir_id].ls_odr[p]["task"][0])])
+				taskthis = deepcopy(ls_courier[crir_id].ls_odr[p]["task"])
+				for q in range(1,length):
+					if 'S' in taskthis[q-1][0] or int(taskthis[q-1][1]) == 0:
+						writer.writerow([stime,TravelTimeByName(taskthis[q][0], taskthis[q-1][0] ,ls_site,ls_spot,ls_shop),taskthis[q]])
+						stime = copy(stime) + TravelTimeByName(taskthis[q][0], taskthis[q-1][0] ,ls_site,ls_spot,ls_shop)
+					else:
+						writer.writerow([stime,TravelTimeByName(taskthis[q][0], taskthis[q-1][0] ,ls_site,ls_spot,ls_shop),ProcTime(taskthis[q-1][1]),taskthis[q]])
+						stime = copy(stime) + TravelTimeByName(taskthis[q][0], taskthis[q-1][0] ,ls_site,ls_spot,ls_shop) + ProcTime(taskthis[q-1][1])
 
-		count_oto_notassigned = copy(count_oto_notassigned) + len(ls_osite[i].ls_oto)
-		print str(count_oto_notassigned) + ' orders not assigned !!!!!!'
-		f = open('../results/' + ls_osite[i].sid + '.csv','w')
-		writer = csv.writer(f)
-		for j in range(0,len(ls_osite[i].ls_dtask)):
-			writer.writerow(ls_osite[i].ls_dtask[j]["task"])
-		# writer.writerows(ls_osite[i].ls_dtask["task"])
-		f.close()
+
+			# for odr in ls_courier[crir_id].ls_odr:
+			# 	writer.writerow(odr["starttime"])
+			# 	for step in odr["task"]:
+			# 		writer.writerow([int(odr["starttime"]) + ])
+			writer.writerow([crir_id,ls_courier[crir_id].avait])
+			f.close()
+			# for oto in ls_osite[i].ls_oto:
+			# 	print oto[0].ptime,oto[0].ddl,oto[0].dtime
+			crir_id = copy(crir_id) + 1
+		continue
+		print 'after continue....'
+
+
+		# for j in range(0,num_oto):
+		# 	# print 'The ' + str(j) + ' th oto of site ' + str(i) + '....'
+		# 	mindist = 10000000
+		# 	bsf = -1
+		# 	bspos = -1
+		# 	for k in range(0,num_dtask):
+		# 		[tempdis,posinsrt] = DistubOTODTask(ls_osite[i].ls_oto[j],ls_osite[i].ls_dtask[k],ls_site,ls_spot,ls_shop)
+		# 		# print ls_osite[i].ls_dtask[k]
+		# 		# print ls_osite[i].ls_oto[j][0].shopid,ls_osite[i].ls_oto[j][0].spotid
+		# 		# print tempdis,posinsrt
+		# 		# break
+		# 		if tempdis < mindist:
+		# 			if tempdis > 0:
+		# 				bsf = copy(k)
+		# 				# tempdis = copy(mindist)
+		# 				mindist = copy(tempdis)
+		# 				bspos = copy(posinsrt)
+		# 	if bsf >= 0:
+		# 		templs = deepcopy(ls_osite[i].ls_dtask[bsf])
+		# 		# print ls_osite[i].ls_oto[j][1], 'pos to insert ', posinsrt
+		# 		ls_osite[i].ls_dtask[bsf] = {}
+		# 		ls_osite[i].ls_dtask[bsf] = InsertOTODTask(ls_osite[i].ls_oto[j],bspos,templs,ls_site,ls_spot,ls_shop)
+		# 		# print ls_osite[i].ls_dtask[bsf][0][0]
+		# 		if 'S' in ls_osite[i].ls_dtask[bsf]["task"][0][0]:
+		# 			print bspos
+		# 			print ls_osite[i].ls_dtask[bsf]["task"][0][0]
+		# 		# print templs
+		# 		# print ls_osite[i].ls_dtask[bsf]
+		# 		# print ls_osite[i].ls_oto[j][1]
+		# 	# break
+		# templs = deepcopy(ls_osite[i].ls_oto)
+		# ls_osite[i].ls_oto = []
+		# ls_osite[i].ls_oto = [x for x in templs if x[1] == 0]
+		# count_crir_this_site = 0
+		# ls_crir_this_site = []
+		# for j in range(0,num_dtask):
+		# 	if ls_osite[i].ls_dtask[j]["hasoto"] == 1:
+		# 		if crir_id < num_crir:
+		# 			# print 'i is ' + str(i) + ' j is ' + str(j)
+		# 			AssignTOCrir(ls_osite[i].ls_dtask[j],ls_courier,crir_id,ls_site,ls_spot,ls_shop)
+		# 			# print 'The ' + str(j) + ' th task of site ' + str(i) + ' is assigned to courier ' + str(crir_id)
+		# 			count_crir_this_site = copy(count_crir_this_site) + 1
+		# 			ls_crir_this_site.append(copy(crir_id))
+		# 			crir_id = copy(crir_id) + 1
+		# 		else:
+		# 			while (1):
+		# 				print 'crir is not enough!!!'
+
+		# templs = deepcopy(ls_osite[i].ls_dtask)
+		# ls_osite[i].ls_dtask = []
+		# ls_osite[i].ls_dtask = [x for x in templs if x["assigned"] == 0]
+		# num_dtask = len(ls_osite[i].ls_dtask)
+		# count_appended = 0
+		# if count_crir_this_site == 0:
+		# 	# count_crir_this_site = copy(num_dtask)/2
+		# 	for j in range(0,num_dtask):
+		# 		# if j == count_crir_this_site:
+		# 		# 	break
+		# 		AssignTOCrir(ls_osite[i].ls_dtask[j],ls_courier,crir_id,ls_site,ls_spot,ls_shop)
+		# 		count_crir_this_site = copy(count_crir_this_site) + 1
+		# 		ls_crir_this_site.append(copy(crir_id))
+		# 		crir_id = copy(crir_id) + 1
+		# 		if j >= copy(num_dtask/2):
+		# 			break
+		# 		if crir_id >= num_crir:
+		# 			while (1):
+		# 				print 'crir is not enough!!!'
+		# 	templs = deepcopy(ls_osite[i].ls_dtask)
+		# 	ls_osite[i].ls_dtask = []
+		# 	ls_osite[i].ls_dtask = [x for x in templs if x["assigned"] == 0]
+		# 	num_dtask = len(ls_osite[i].ls_dtask)
+		# for j in range(0,num_dtask):
+		# 	# print 'i is ' + str(i) + ' j is ' + str(j) + ' count_crir_this_site is ' + str(count_crir_this_site) + ', |' + str(len(ls_crir_this_site))
+		# 	# print len(ls_osite), len(ls_osite[i].ls_dtask)
+		# 	AssignTOCrir(ls_osite[i].ls_dtask[j],ls_courier,ls_crir_this_site[count_appended],ls_site,ls_spot,ls_shop)
+		# 	count_appended = copy(count_appended) + 1
+		# 	if count_appended == count_crir_this_site:
+		# 		break
+		# templs = deepcopy(ls_osite[i].ls_dtask)
+		# ls_osite[i].ls_dtask = []
+		# ls_osite[i].ls_dtask = [x for x in templs if x["assigned"] == 0]
+		# num_dtask = len(ls_osite[i].ls_dtask)
+		# num_oto = len(ls_osite[i].ls_oto)
+		# if num_oto == 0:
+		# 	continue
+		# for j in range(0,num_oto):
+		# 	mindist = 10000000
+		# 	bsf_crir = -1
+		# 	bspos = -1
+		# 	bsf_tsk = -1
+		# 	for k in range(0,count_crir_this_site):
+		# 		[temptsk,tempdis,posinsrt] = DistubOTOCourier(ls_osite[i].ls_oto[j],ls_courier[ls_crir_this_site[k]],ls_site,ls_spot,ls_shop)
+		# 		if tempdis < mindist:
+		# 			if temptsk >= 0:
+		# 				bsf_tsk = copy(temptsk)
+		# 				bsf_crir = copy(ls_crir_this_site[k])
+		# 				bspos = copy(posinsrt)
+		# 				mindist = copy(tempdis)
+		# 	if bsf_crir >= 0:
+		# 		templs = deepcopy(ls_courier[bsf_crir].ls_odr[bsf_tsk])
+		# 		ls_courier[bsf_crir].ls_odr[bsf_tsk] = {}
+		# 		ls_courier[bsf_crir].ls_odr[bsf_tsk] = InsertOTODTask(ls_osite[i].ls_oto[j],bspos,templs,ls_site,ls_spot,ls_shop)
+		# templs = deepcopy(ls_osite[i].ls_oto)
+		# ls_osite[i].ls_oto = []
+		# ls_osite[i].ls_oto = [x for x in templs if x[1] == 0]
+
+		# count_oto_notassigned = copy(count_oto_notassigned) + len(ls_osite[i].ls_oto)
+		# templs = deepcopy(ls_osite[i].ls_oto)
+		# ls_osite[i].ls_oto = []
+		# ls_osite[i].ls_oto = [x for x in templs if x[1] == 0]
+		# print str(count_oto_notassigned) + ' orders not assigned !!!!!!'
+		# f = open('../results/' + ls_osite[i].sid + '.csv','w')
+		# writer = csv.writer(f)
+		# for j in range(0,len(ls_osite[i].ls_dtask)):
+		# 	writer.writerow(ls_osite[i].ls_dtask[j]["task"])
+		# f.close()
 	print 'currently, there are still ' + str(count_oto_notassigned) + ' oto orders waiting to be assigned'
-
-	# while(len(ls_asgn_odr) < num_order):
-	# 	[isfound,order,task] = FindBestMatch(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoodr_sort,ls_asgn_dtsk,ls_asgn_odr)
-	# 	break
-	# 	if isfound:
-	# 		fulltask = ExpandTask(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoodr_sort,ls_asgn_dtsk,ls_asgn_odr)
-	# 		ls_fulltask.append(copy(fulltask))
-	# 	else:
-	# 		ls_pure_oto = AssignPureOTO(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoodr_sort,ls_asgn_dtsk,ls_asgn_odr)
-
 
 	return [ls_fulltask,ls_pure_oto]
 
@@ -251,8 +323,8 @@ def AssignTOCrir(task,ls_courier,crir_id,ls_site,ls_spot,ls_shop):
 	[lng,lat] = GetLngLat(task["task"][-1][0],ls_site,ls_spot,ls_shop)
 	ls_courier[crir_id].availng = lng
 	ls_courier[crir_id].availat = lat
-	ls_courier[crir_id].availt = ComputeTripCost(task["task"],ls_site,ls_spot,ls_shop) + copy(ls_courier[crir_id].t)
-	ls_courier[crir_id].availv = 0
+	ls_courier[crir_id].avait = ComputeTripCost(task["task"],ls_site,ls_spot,ls_shop) + copy(ls_courier[crir_id].t)
+	ls_courier[crir_id].avaiv = 0
 	ls_courier[crir_id].lng = lng
 	ls_courier[crir_id].lat = lat
 	# print 'sender ' + str(crir_id) + ' takes misson ' + str(i) + ', ' + str(j) + ' of site ' + str(ls_osite[i].sid) + ' at time ' + str(ls_courier[crir_id].t)
@@ -261,7 +333,7 @@ def AssignTOCrir(task,ls_courier,crir_id,ls_site,ls_spot,ls_shop):
 	# print ComputeTripVol(ls_osite[i].ls_fulltask[j]["task"])
 	# break
 	# count_assigned_pp = copy(count_assigned_pp) + 1
-	ls_courier[crir_id].t = copy(ls_courier[crir_id].availt)
+	ls_courier[crir_id].t = copy(ls_courier[crir_id].avait)
 	ls_courier[crir_id].lng = copy(ls_courier[crir_id].availng)
 	ls_courier[crir_id].lat = copy(ls_courier[crir_id].availat)
 	task["assigned"] = 1
@@ -471,6 +543,8 @@ def ComputeTripCost(trip,ls_site,ls_spot,ls_shop,*arg):
 		t_travel = TravelTime(prev,loc)
 		if 'S' in locid:
 			t_proc = 0
+		elif 'A' in locid:
+			t_proc = 0
 		else:
 			t_proc = ProcTime(bag)
 		if bag == 0:
@@ -562,6 +636,9 @@ def DistubOTOCourier(otoodr,courier,ls_site,ls_spot,ls_shop):
 	bsf = -1
 	bspos = -1
 	for i in range(0,num_task):
+		taskend = ComputeTripCost(courier.ls_odr[i]["task"],ls_site,ls_spot,ls_shop) + copy(courier.ls_odr[i]["starttime"])
+		if taskend < otoodr[0].ptime:
+			continue
 		[tempdis,posinsrt] = DistubOTODTask(otoodr,courier.ls_odr[i],ls_site,ls_spot,ls_shop)
 		if tempdis < mindist:
 			if tempdis > 0:
@@ -570,6 +647,24 @@ def DistubOTOCourier(otoodr,courier,ls_site,ls_spot,ls_shop):
 				mindist = copy(tempdis)
 				bspos = copy(posinsrt)
 	return [bsf,mindist,bspos]
+
+def DistubOTOCourierMQ(otoodr,courier,ls_site,ls_spot,ls_shop):
+	num_task = len(courier.ls_odr)
+	mindist = 100000000
+	bsf = -1
+	bspos = -1
+	for i in range(0,num_task):
+		# taskend = ComputeTripCost(courier.ls_odr[i]["task"],ls_site,ls_spot,ls_shop) + copy(courier.ls_odr[i]["starttime"])
+		# if taskend < otoodr[0].ptime:
+		# 	continue
+		[tempdis,posinsrt] = DistubOTODTaskMQ(otoodr,courier.ls_odr[i],ls_site,ls_spot,ls_shop)
+		if tempdis < mindist:
+			if tempdis > 0:
+				bsf = copy(i)
+				# tempdis = copy(mindist)
+				mindist = copy(tempdis)
+				bspos = copy(posinsrt)
+	return [bsf,mindist,bspos]	
 
 def DistubOTODTask(otoodr,dtask,ls_site,ls_spot,ls_shop):
 	distb = 100000000
@@ -584,7 +679,6 @@ def DistubOTODTask(otoodr,dtask,ls_site,ls_spot,ls_shop):
 		if 'S' in dtask["task"][i][0]:
 			continue
 		tempid = copy(i) + 1
-		# print tempid
 		for j in range(0,tempid):
 			templs["task"].append(copy(dtask["task"][j]))
 		templs["task"].append([copy(otoodr[0].shopid),str(copy(otoodr[0].num)),copy(otoodr[0].ptime),copy(otoodr[0].ddl)])
@@ -593,9 +687,57 @@ def DistubOTODTask(otoodr,dtask,ls_site,ls_spot,ls_shop):
 		for j in range(tempid,len(dtask["task"])):
 			templs["task"].append(dtask["task"][j])
 			totalv = copy(totalv) + int(dtask["task"][j][1])
-			if totalv > 140:
-				# print 'cannot accomodate, too much'
-				continue
+		if totalv > 140:
+			print 'cannot accomodate, too much'
+			continue
+		[sintvl,eintvl,hasoto] = FindSEIntvl(templs,ls_site,ls_spot,ls_shop)
+		if eintvl < 0:
+			# print 'too late...'
+			continue
+		# if sintvl <= 0:
+		# 	newt = ComputeTripCost(templs["task"],ls_site,ls_spot,ls_shop)
+		# else:
+		newt = ComputeTripCost(templs["task"],ls_site,ls_spot,ls_shop) + copy(sintvl)
+		temp_distb = copy(newt) - copy(origt)
+		if temp_distb < distb:
+			distb = copy(temp_distb)
+			bsf = copy(i)
+		# break
+		# if hasoto == 0:
+		# 	while(1):
+		# 		print 'oto not found!!!!!!!!!!!!'
+	if bsf < 0:
+		# print 'cannot insert, maybe too large....'
+		return [-1,-1]
+	if distb > origt + TravelTimeByName(otoodr[0].shopid,otoodr[0].spotid,ls_site,ls_spot,ls_shop):
+		# print 'this oto odr starts too late or too far ....'
+		return [-1,-1]
+	return [distb,bsf]
+
+def DistubOTODTaskMQ(otoodr,dtask,ls_site,ls_spot,ls_shop):
+	distb = 100000000
+	bsf = -1
+	temp_distb = 0
+	origt = ComputeTripCost(dtask["task"],ls_site,ls_spot,ls_shop) + copy(dtask["starttime"])
+	newt = 0
+	templs = {}
+	length = len(dtask["task"]) - 1
+	for i in range(1,length):
+		templs = {"starttime":copy(dtask["starttime"]),"task":[],"hasoto":dtask["hasoto"]}
+		if 'S' in dtask["task"][i][0]:
+			continue
+		tempid = copy(i) + 1
+		for j in range(0,tempid):
+			templs["task"].append(copy(dtask["task"][j]))
+		templs["task"].append([copy(otoodr[0].shopid),str(copy(otoodr[0].num)),copy(otoodr[0].ptime),copy(otoodr[0].ddl)])
+		templs["task"].append([copy(otoodr[0].spotid),str(-copy(otoodr[0].num)),copy(otoodr[0].dtime)])
+		totalv = int(copy(otoodr[0].num))
+		for j in range(tempid,len(dtask["task"])):
+			templs["task"].append(dtask["task"][j])
+			totalv = copy(totalv) + int(dtask["task"][j][1])
+		if totalv > 140:
+			print 'cannot accomodate, too much'
+			continue
 		# print dtask
 		# print templs
 		[sintvl,eintvl,hasoto] = FindSEIntvl(templs,ls_site,ls_spot,ls_shop)
@@ -618,9 +760,9 @@ def DistubOTODTask(otoodr,dtask,ls_site,ls_spot,ls_shop):
 	if bsf < 0:
 		# print 'cannot insert, maybe too large....'
 		return [-1,-1]
-	if distb > origt + TravelTimeByName(otoodr[0].shopid,otoodr[0].spotid,ls_site,ls_spot,ls_shop):
-		# print 'this oto odr starts too late or too far ....'
-		return [-1,-1]
+	# if distb > origt + TravelTimeByName(otoodr[0].shopid,otoodr[0].spotid,ls_site,ls_spot,ls_shop):
+	# 	# print 'this oto odr starts too late or too far ....'
+	# 	return [-1,-1]
 	return [distb,bsf]
 
 def ED(ls1,ls2):
@@ -917,6 +1059,20 @@ def FindNaiveAssign(site,o_graph,CAPACITY,temp_order):
 		# print 'total_bag is ', total_bag
 	return ls_res
 
+def FindNrstDTaskOTO(otoodr,ls_dtask,ls_site,ls_spot,ls_shop):
+	id_nrst_dtsk = -1
+	loc1 = GetLoc(otoodr.shopid,ls_site,ls_spot,ls_shop)
+	mindist = 10000000
+	# print otoodr.shopid
+	# print ls_dtask[0]["task"][0][0]
+	for i in range(0,len(ls_dtask)):
+		loc2 = GetLoc(copy(ls_dtask[i]["task"][0][0]),ls_site,ls_spot,ls_shop)
+		dist = Dist(loc1,loc2)
+		if dist < mindist:
+			mindist = copy(dist)
+			id_nrst_dtsk = copy(i)
+	return id_nrst_dtsk
+
 def FindSEIntvl(dtask,ls_site,ls_spot,ls_shop):
 	length = len(dtask["task"])
 	hasoto = 0
@@ -942,6 +1098,13 @@ def FindSEIntvl(dtask,ls_site,ls_spot,ls_shop):
 			earliest = copy(tempearly)
 		if earliest > latest:
 			return [-1, -1 , 1]
+	for i in range(2,length):
+		if len(dtask["task"][-i]) == 2:
+			break
+	tbfr = ComputeTripCost(dtask["task"],ls_site,ls_spot,ls_shop,i)
+	template = 720 - copy(tbfr)
+	if template < latest:
+		latest = copy(template)
 	if latest < dtask["starttime"]:
 		return [-1, -1, 1]
 	if earliest < dtask["starttime"]:
@@ -1126,6 +1289,12 @@ def KNNLoc(ls_loc,k):
 		# for tpk in ls_tpk:
 		# 	print ls_loc[tpk[1]].sid
 	return ls_nbrs
+
+def MergeAndAssign(ls_otoorder,ls_courier,ls_crir_this_site,ls_site,ls_spot,ls_shop):
+	ddl_curr = ls_otoorder[-1][0].ddl
+	print 'ddl is ' + str(ddl_curr)
+	num_crir_this = len(ls_crir_this_site)
+	return 
 
 def MinPfctMatching(ls_to_match,ls_site,ls_spot,ls_shop):
 	ls_match = []
@@ -1335,6 +1504,38 @@ def ODDist(ls_order,ls_ori,ls_dest,*ls_ori2):
 	avg_dist = mean(ls_dist)
 	std_dist = std(ls_dist)
 	return [avg_dist,std_dist]
+
+def ReScheduleCourier(courier,ls_site,ls_spot,ls_shop,hardddl):
+	num_task = len(courier.ls_odr)
+	stime = 0
+	prev = 0
+	curr = 0
+	id_stop = -1
+	for i in range(0,num_task):
+		if courier.cid == 'A007':
+			print 'we are ReScheduling A007................................'
+			print curr
+		curr = copy(prev) + ComputeTripCost(courier.ls_odr[i]["task"],ls_site,ls_spot,ls_shop)
+		if curr > hardddl:
+			id_stop = copy(i)
+			break
+		elif curr > 720:
+			id_stop = copy(i)
+			break
+		courier.ls_odr[i]["starttime"] = copy(prev)
+		prev = copy(curr)
+	courier.avait = copy(prev)
+	if courier.avait > 720:
+		print courier.avait
+		print courier.ls_odr[0]
+	ls_to_return = []
+	if id_stop >= 0:
+		for j in range(id_stop,num_task):
+			courier.ls_odr[j]["starttime"] = 0
+			courier.ls_odr[j]["assigned"] = 0
+			ls_to_return.append(deepcopy(courier.ls_odr[j]))
+		return [ls_to_return,courier.ls_odr[0:id_stop]]
+	return [[],courier.ls_odr]
 
 def RmCross(res,o_graph):
 	new_res = []
