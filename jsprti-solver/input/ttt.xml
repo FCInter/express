@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem xmlns="http://www.w3schools.com"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com vrp_xml_schema.xsd">
+     <problemType>
+          <fleetSize>FINITE</fleetSize>
+     </problemType>
+     <vehicles>
+          <vehicle>
+               <id>v</id>
+               <typeId>vvt-v</typeId>
+               <startLocation>
+                    <id>[x=0.0][y=0.0]</id>
+                    <coord x="0.0" y="0.0"/>
+               </startLocation>
+               <endLocation>
+                    <id>[x=0.0][y=0.0]</id>
+                    <coord x="0.0" y="0.0"/>
+               </endLocation>
+               <timeSchedule>
+                    <start>0.0</start>
+                    <end>9.223372036854776E15</end>
+               </timeSchedule>
+               <returnToDepot>false</returnToDepot>
+          </vehicle>
+     </vehicles>
+     <vehicleTypes>
+          <type>
+               <id>vvt-v</id>
+               <capacity-dimensions>
+                    <dimension index="0">1</dimension>
+               </capacity-dimensions>
+               <costs>
+                    <fixed>0.0</fixed>
+                    <distance>1.0</distance>
+                    <time>0.0</time>
+               </costs>
+          </type>
+     </vehicleTypes>
+     <services>
+          <service id="pick1" type="pickup">
+               <location>
+                    <id>A1</id>
+                    <coord x="500.0" y="0.0"/>
+               </location>
+               <capacity-dimensions>
+                    <dimension index="0">1</dimension>
+               </capacity-dimensions>
+               <duration>1000.0</duration>
+               <timeWindows>
+                    <timeWindow>
+                         <start>0.0</start>
+                         <end>82800.0</end>
+                    </timeWindow>
+               </timeWindows>
+          </service>
+          <service id="pick2" type="pickup">
+               <location>
+                    <id>B1</id>
+                    <coord x="-250.0" y="433.0"/>
+               </location>
+               <capacity-dimensions>
+                    <dimension index="0">1</dimension>
+               </capacity-dimensions>
+               <duration>1000.0</duration>
+               <timeWindows>
+                    <timeWindow>
+                         <start>0.0</start>
+                         <end>82800.0</end>
+                    </timeWindow>
+               </timeWindows>
+          </service>
+          <service id="pick3" type="pickup">
+               <location>
+                    <id>C1</id>
+                    <coord x="-250.0" y="-433.0"/>
+               </location>
+               <capacity-dimensions>
+                    <dimension index="0">1</dimension>
+               </capacity-dimensions>
+               <duration>1000.0</duration>
+               <timeWindows>
+                    <timeWindow>
+                         <start>0.0</start>
+                         <end>82800.0</end>
+                    </timeWindow>
+               </timeWindows>
+          </service>
+          <service id="drop1" type="delivery">
+               <location>
+                    <id>A2</id>
+                    <coord x="-500.0" y="0.0"/>
+               </location>
+               <capacity-dimensions>
+                    <dimension index="0">1</dimension>
+               </capacity-dimensions>
+               <duration>1000.0</duration>
+               <timeWindows>
+                    <timeWindow>
+                         <start>0.0</start>
+                         <end>82800.0</end>
+                    </timeWindow>
+               </timeWindows>
+          </service>
+          <service id="drop2" type="delivery">
+               <location>
+                    <id>B2</id>
+                    <coord x="250.0" y="-433.0"/>
+               </location>
+               <capacity-dimensions>
+                    <dimension index="0">1</dimension>
+               </capacity-dimensions>
+               <duration>1000.0</duration>
+               <timeWindows>
+                    <timeWindow>
+                         <start>0.0</start>
+                         <end>82800.0</end>
+                    </timeWindow>
+               </timeWindows>
+          </service>
+          <service id="drop3" type="delivery">
+               <location>
+                    <id>C2</id>
+                    <coord x="250.0" y="433.0"/>
+               </location>
+               <capacity-dimensions>
+                    <dimension index="0">1</dimension>
+               </capacity-dimensions>
+               <duration>1000.0</duration>
+               <timeWindows>
+                    <timeWindow>
+                         <start>0.0</start>
+                         <end>82800.0</end>
+                    </timeWindow>
+               </timeWindows>
+          </service>
+     </services>
+</problem>
+
