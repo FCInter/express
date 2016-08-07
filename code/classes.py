@@ -60,6 +60,7 @@ class OtOOrder(object):
 	ptime = 0
 	dtime = 0
 	num = 0
+	ddl = 0
 	def __init__(self, oid,spotid,shopid,ptime,dtime,num):
 		self.oid = oid
 		self.spotid = spotid
@@ -67,6 +68,7 @@ class OtOOrder(object):
 		self.ptime = ptime
 		self.dtime = dtime
 		self.num = num
+		self.ddl = 0
 
 class Courier(object):
 	"""docstring for Courier"""
@@ -76,8 +78,23 @@ class Courier(object):
 	volume = 0
 	lng = 0
 	lat = 0
+	t = 0
+	avait = 0
+	availng = 0
+	availat = 0
+	avaiv = 0
 	def __init__(self, cid):
 		self.cid = cid
+		self.ls_odr = []
+		self.capacity = 140
+		self.volume = 0
+		self.lng = 0
+		self.lat = 0
+		self.t = 0
+		self.avait = 0
+		self.availng = 0
+		self.availat = 0
+		self.avaiv = 0
 
 class GOrder(object):
 	"""docstring for StartPoint"""
@@ -94,6 +111,21 @@ class GOrder(object):
 		self.ptime = ptime
 		self.dtime = dtime
 		self.num = num
+
+class TaskPersite(object):
+	sid = 0
+	lng = 0
+	lat = 0
+	ls_dtask = []
+	ls_oto = []
+	ls_fulltask = []
+	def __init__(self, sid, lng, lat):
+		self.sid = sid
+		self.lng = lng
+		self.lat = lat
+		self.ls_dtask = []
+		self.ls_oto = []
+		self.ls_fulltask = []
 
 speed = 0.25
 str_date = '1970-01-01'
