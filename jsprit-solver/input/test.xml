@@ -1,1 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>/n/t<problem xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com vrp_xml_schema.xsd">/n/t/t<problemType>/n/t/t/t<fleetSize>INFINITE</fleetSize>/n/t/t/t<fleetComposition>HOMOGENEOUS</fleetComposition>/n/t/t</problemType>/n/t/t<vehicles>/n/t/t/t<vehicle>/n/t/t/t/t<id>Site</id>/n/t/t/t/t<typeId>v8</typeId>/n/t/t/t/t<startLocation>/n/t/t/t/t/t<id>Site</id>/n/t/t/t/t/t<coord x="0" y="0"/>/n/t/t/t/t</startLocation>/n/t/t/t/t<timeSchedule>/n/t/t/t/t/t<start>0.0</start>/n/t/t/t/t/t<end>9999.00</end>/n/t/t/t/t</timeSchedule>/n/t/t/t/t<returnToDepot>true</returnToDepot>/n/t/t/t</vehicle>/n/t/t</vehicles>/n/t/t<vehicleTypes>/n/t/t/t<type>/n/t/t/t/t<type>v8</type>/n/t/t/t/t<capacity>140</capacity>/n/t/t/t/t<costs>/n/t/t/t/t/t<fixed>0.0</fixed>/n/t/t/t/t/t<distance>1.0</distance>/n/t/t/t/t/t<time>0.0</time>/n/t/t/t/t</costs>/n/t/t/t</type>/n/t/t</vehicleTypes>/n/t/t<services>/n/t/t/t<service id="sb01" type="service">/n/t/t/t/t<locationId>B555</locationId>/n/t/t/t/t<coord x="25" y="15"/>/n/t/t/t/t<capacity-demand>100</capacity-demand>/n/t/t/t/t<duration>1</duration>/n/t/t/t/t<timeWindows/>/n/t/t/t/t<timeWindow>/n/t/t/t/t/t<start>0.0</start>/n/t/t/t/t/t<end>9999</end>/n/t/t/t/t</timeWindow>/n/t/t/t</service>/n/t/t</services>/n/t/t<shpments>/n/t/t/t<shipment id="o2o0001">/n/t/t/t/t<pickup>/n/t/t/t/t/t<coord x="10" y="-9"/>/n/t/t/t/t/t<timeWindows>/n/t/t/t/t/t/t<timeWindow>/n/t/t/t/t/t/t/t<start>100</start>/n/t/t/t/t/t/t/t<end>150</end>/n/t/t/t/t/t/t</timeWindow>/n/t/t/t/t/t</timeWindows>/n/t/t/t/t</pickup>/n/t/t/t/t<delivery>/n/t/t/t/t/t<coord x="-8" y="15"/>/n/t/t/t/t/t<timeWindows>/n/t/t/t/t/t/t<timeWindow>/n/t/t/t/t/t/t/t<start>230</start>/n/t/t/t/t/t/t/t<end>240</end>/n/t/t/t/t/t/t</timeWindow>/n/t/t/t/t/t</timeWindows>/n/t/t/t/t</delivery>/n/t/t/t/t<capacity-dimensions>/n/t/t/t/t/t<dimention index="0">10</dimention>/n/t/t/t/t</capacity-dimensions>/n/t/t/t</shipment>/n/t/t</shpments>/n/t</problem>/n
+<?xml version="1.0" encoding="utf-8"?>
+	<problem xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com vrp_xml_schema.xsd">
+		<problemType>
+			<fleetSize>INFINITE</fleetSize>
+			<fleetComposition>HOMOGENEOUS</fleetComposition>
+		</problemType>
+		<vehicles>
+			<vehicle>
+				<id>Site</id>
+				<typeId>v8</typeId>
+				<startLocation>
+					<id>Site</id>
+					<coord x="0" y="0"/>
+				</startLocation>
+				<timeSchedule>
+					<start>0.0</start>
+					<end>9999.00</end>
+				</timeSchedule>
+				<returnToDepot>true</returnToDepot>
+			</vehicle>
+		</vehicles>
+		<vehicleTypes>
+			<type>
+				<id>v8</id>
+				<capacity>140</capacity>
+				<costs>
+					<fixed>0.0</fixed>
+					<distance>1.0</distance>
+					<time>0.0</time>
+				</costs>
+			</type>
+		</vehicleTypes>
+		<services>
+			<service id="sb01" type="service">
+				<locationId>B555</locationId>
+				<coord x="25" y="15"/>
+				<capacity-demand>100</capacity-demand>
+				<duration>1</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>9999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+		</services>
+		<shipments/>
+	</problem>

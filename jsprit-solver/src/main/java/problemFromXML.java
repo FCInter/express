@@ -18,6 +18,7 @@
 
 
 import jsprit.analysis.toolbox.AlgorithmSearchProgressChartListener;
+import jsprit.analysis.toolbox.GraphStreamViewer;
 import jsprit.analysis.toolbox.Plotter;
 import jsprit.core.algorithm.VehicleRoutingAlgorithm;
 import jsprit.core.algorithm.box.Jsprit;
@@ -62,7 +63,7 @@ public class problemFromXML {
          * A solomonReader reads solomon-instance files, and stores the required information in the builder.
 		 */
            // new VrpXMLReader(vrpBuilder).read("/home/xfz/sandBox/jsprit/jsprit-examples/input/pickups_and_deliveries_solomon_r101.xml");
-        new VrpXMLReader(vrpBuilder).read("input/ttt.xml");
+        new VrpXMLReader(vrpBuilder).read("input/test.xml");
 		/*
          * Finally, the problem can be built. By default, transportCosts are crowFlyDistances (as usually used for vrp-instances).
 		 */
@@ -70,6 +71,7 @@ public class problemFromXML {
         final VehicleRoutingProblem vrp = vrpBuilder.build();
 
         new Plotter(vrp).plot("output/pd_solomon_r101.png", "pd_r101");
+        ;
 
 
 		/*
@@ -91,8 +93,9 @@ public class problemFromXML {
          * Retrieve best solution.
 		 */
         VehicleRoutingProblemSolution solution = new SelectBest().selectSolution(solutions);
-
+        new GraphStreamViewer(vrp, solution).labelWith(GraphStreamViewer.Label.ID).setRenderDelay(200).display();
 		/*
+
 		 * print solution
 		 */
         SolutionPrinter.print(solution);
