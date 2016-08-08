@@ -124,22 +124,6 @@ def AssignOTO(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoorder,ls_courier):
 			# if cround >= 1:
 			# 	break
 		ExportFullTaskToCSV(ls_osite[i].sid,ls_courier,crir_id,ls_site,ls_spot,ls_shop)
-		while len(ls_osite[i].ls_dtask) > 0:
-			print 'still dtask remaining ....'
-			prevt = 0
-			num_dtask = len(ls_osite[i].ls_dtask)
-			for j in range(0,num_dtask):
-				cost = ComputeTripCost(ls_osite[i].ls_dtask[j]["task"],ls_site,ls_spot,ls_shop)
-				if ls_courier[crir_id].avait + copy(cost) >= 720:
-					ExportFullTaskToCSV(ls_osite[i].sid,ls_courier,crir_id,ls_site,ls_spot,ls_shop)
-					crir_id = copy(crir_id) + 1
-				AssignTOCrir(ls_osite[i].ls_dtask[j],ls_courier,crir_id,ls_site,ls_spot,ls_shop)
-			templs = deepcopy(ls_osite[i].ls_dtask)
-			ls_osite[i].ls_dtask = []
-			ls_osite[i].ls_dtask = [x for x in templs if x["assigned"] == 0]
-			num_dtask = len(ls_osite[i].ls_dtask)
-
-
 		crir_id = copy(crir_id) + 1
 		if num_oto > 0:
 			print 'still ' + str(num_oto) + ' remains ...'

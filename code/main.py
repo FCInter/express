@@ -27,7 +27,7 @@ def main():
 	cost = 0
 	ls_dtask = []
 	istart = 0
-	iend = 300
+	iend = 1
 	# ls_dtask = FindDTasks(ls_site,ls_spot,ls_shop,istart,iend,ls_dorder,CAPACITY)
 	# print 'total_worker is ',total_worker
 	# print 'total cost is ', cost
@@ -48,6 +48,11 @@ def main():
 	print 'number of sites is ',len(ls_dtask)
 	print 'number of oto orders is ',len(ls_otoorder)
 	[ls_fulltask,ls_pureoto] = AssignOTO(ls_site,ls_spot,ls_shop,ls_dtask,ls_otoorder,ls_courier)
+	AddOrderId(ls_courier,ls_site,ls_spot,ls_shop,ls_dorder,ls_otoorder)
+	ExportAsResult(ls_courier,ls_site,ls_spot,ls_shop)
+
+
+
 	# AssignSender(ls_site,ls_spot,ls_shop,ls_fulltask,ls_pureoto)
 	# print 'ls_dtask is ', len(ls_dtask[1])
 	# for i in range(0,len(ls_dtask[1])):
