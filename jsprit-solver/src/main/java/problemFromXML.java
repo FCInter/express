@@ -27,11 +27,16 @@ import jsprit.core.analysis.SolutionAnalyser;
 import jsprit.core.problem.Location;
 import jsprit.core.problem.VehicleRoutingProblem;
 import jsprit.core.problem.cost.TransportDistance;
+import jsprit.core.problem.driver.Driver;
 import jsprit.core.problem.io.VrpXMLReader;
 import jsprit.core.problem.solution.VehicleRoutingProblemSolution;
 import jsprit.core.problem.vehicle.Vehicle;
 import jsprit.core.reporting.SolutionPrinter;
 import jsprit.core.problem.cost.TransportDistance;
+import jsprit.core.util.Coordinate;
+import jsprit.core.util.DistanceUnit;
+import jsprit.core.util.GreatCircleCosts;
+import jsprit.core.util.GreatCircleDistanceCalculator;
 
 
 import java.io.File;
@@ -51,7 +56,11 @@ public class problemFromXML {
             boolean result = dir.mkdir();
             if(result) System.out.println("./output created");
         }
-
+        Location from = Location.newInstance(111,100);
+        Location to   = Location.newInstance(112,120);
+        myGreatCircleCosts costs = new myGreatCircleCosts();
+        double distance = costs.getDistance(from,to);
+        System.out.print(distance);
 		/*
          * Build the problem.
 		 *
@@ -63,10 +72,15 @@ public class problemFromXML {
          * A solomonReader reads solomon-instance files, and stores the required information in the builder.
 		 */
            // new VrpXMLReader(vrpBuilder).read("/home/xfz/sandBox/jsprit/jsprit-examples/input/pickups_and_deliveries_solomon_r101.xml");
-        new VrpXMLReader(vrpBuilder).read("input/test.xml");
+        new VrpXMLReader(vrpBuilder).read("input/A001_problem.xml");
 		/*
          * Finally, the problem can be built. By default, transportCosts are crowFlyDistances (as usually used for vrp-instances).
 		 */
+
+         myGreatCircleCosts vrpTimeCost = new myGreatCircleCosts();
+        vrpTimeCost.setSpeed(250);
+		vrpBuilder.setRoutingCost( vrpTimeCost);
+
 
         final VehicleRoutingProblem vrp = vrpBuilder.build();
 
@@ -81,6 +95,7 @@ public class problemFromXML {
 		 */
 //		VehicleRoutingAlgorithm vra = new SchrimpfFactory().createAlgorithm(vrp);
         VehicleRoutingAlgorithm vra = Jsprit.createAlgorithm(vrp);
+        vra.setMaxIterations(1000);
         vra.getAlgorithmListeners().addListener(new AlgorithmSearchProgressChartListener("output/sol_progress.png"));
         /*
          * Solve the problem.
@@ -93,12 +108,13 @@ public class problemFromXML {
          * Retrieve best solution.
 		 */
         VehicleRoutingProblemSolution solution = new SelectBest().selectSolution(solutions);
-        new GraphStreamViewer(vrp, solution).labelWith(GraphStreamViewer.Label.ID).setRenderDelay(200).display();
+        //new GraphStreamViewer(vrp, solution).labelWith(GraphStreamViewer.Label.ID).setRenderDelay(200).display();
 		/*
 
 		 * print solution
 		 */
-        SolutionPrinter.print(solution);
+        //SolutionPrinter.print(solution);
+        SolutionPrinter.print(vrp, solution, SolutionPrinter.Print.VERBOSE);
 
 		/*
 		 * Plot solution.

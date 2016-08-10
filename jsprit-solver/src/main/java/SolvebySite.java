@@ -48,37 +48,18 @@ public class SolvebySite {
                     {
                         VehicleRoutingProblem.Builder vrpBuilder = VehicleRoutingProblem.Builder.newInstance();
                         new VrpXMLReader(vrpBuilder).read("input/" +line );
-                        vrpBuilder.setRoutingCost(new GreatCircleCosts() {
-                            // @overide
-                            public double calculateDistance(Coordinate coord1, Coordinate coord2, DistanceUnit distanceUnit) {
-                                double lon1 = coord1.getX();
-                                double lon2 = coord2.getX();
-                                double lat1 = coord1.getY();
-                                double lat2 = coord2.getY();
-                                double r = 6378.137;
 
-                                double delta_Lat = Math.toRadians(lat2 - lat1);
-                                double delta_Lon = Math.toRadians(lon2 - lon1);
-                                lat1 = Math.toRadians(lat1);
-                                lat2 = Math.toRadians(lat2);
 
-                                double a = Math.sin(delta_Lat / 2) * Math.sin(delta_Lat / 2) + Math.sin(delta_Lon / 2) * Math.sin(delta_Lon / 2) * Math.cos(lat1) * Math.cos(lat2);
-                                double c = 2 * Math.asin(Math.sqrt(a));
-                                double distance = r * c;
-                                if (distanceUnit.equals(DistanceUnit.Meter)) {
-                                    distance = distance * 1000.;
+                        myGreatCircleCosts vrpTimeCost = new myGreatCircleCosts();
+                        vrpTimeCost.setSpeed(250D);
+                        vrpBuilder.setRoutingCost( vrpTimeCost);
 
-                                }
-                                return distance;
-
-                            }
-
-                            ;
-
-                        });
                         final VehicleRoutingProblem vrp = vrpBuilder.build();
-                        VehicleRoutingAlgorithm vra = Jsprit.createAlgorithm(vrp);
 
+
+
+                        VehicleRoutingAlgorithm vra = Jsprit.createAlgorithm(vrp);
+                        vra.setMaxIterations(680);
         /*
          * Solve the problem.
 		 *
