@@ -1,0 +1,936 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<problem xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com vrp_xml_schema.xsd">
+		<problemType>
+			<fleetSize>INFINITE</fleetSize>
+			<fleetComposition>HOMOGENEOUS</fleetComposition>
+		</problemType>
+		<vehicles>
+			<vehicle>
+				<id>Site</id>
+				<typeId>v8</typeId>
+				<startLocation>
+					<id>A019</id>
+					<coord x="30.84599" y="121.351727"/>
+				</startLocation>
+				<timeSchedule>
+					<start>0.0</start>
+					<end>999999.00</end>
+				</timeSchedule>
+				<returnToDepot>true</returnToDepot>
+			</vehicle>
+		</vehicles>
+		<vehicleTypes>
+			<type>
+				<id>v8</id>
+				<capacity>140</capacity>
+				<costs>
+					<fixed>0.0</fixed>
+					<distance>0.004</distance>
+					<time>0.0</time>
+				</costs>
+			</type>
+		</vehicleTypes>
+		<services>
+			<service id="B0075" type="service">
+				<locationId>B0075</locationId>
+				<coord x="30.863434" y="121.33477"/>
+				<capacity-demand>1</capacity-demand>
+				<duration>8.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B0295" type="service">
+				<locationId>B0295</locationId>
+				<coord x="30.834259" y="121.286285"/>
+				<capacity-demand>3</capacity-demand>
+				<duration>10.1961524227</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B0345" type="service">
+				<locationId>B0345</locationId>
+				<coord x="30.805239" y="121.3591"/>
+				<capacity-demand>15</capacity-demand>
+				<duration>16.6189500386</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B0490" type="service">
+				<locationId>B0490</locationId>
+				<coord x="30.883129" y="121.313148"/>
+				<capacity-demand>30</capacity-demand>
+				<duration>21.4316767252</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B0495" type="service">
+				<locationId>B0495</locationId>
+				<coord x="30.848761" y="121.340347"/>
+				<capacity-demand>13</capacity-demand>
+				<duration>15.8166538264</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B0763" type="service">
+				<locationId>B0763</locationId>
+				<coord x="30.885916" y="121.340927"/>
+				<capacity-demand>11</capacity-demand>
+				<duration>14.9498743711</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1059" type="service">
+				<locationId>B1059</locationId>
+				<coord x="30.832865" y="121.344017"/>
+				<capacity-demand>14</capacity-demand>
+				<duration>16.2249721603</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1227" type="service">
+				<locationId>B1227</locationId>
+				<coord x="30.899569" y="121.390678"/>
+				<capacity-demand>10</capacity-demand>
+				<duration>14.4868329805</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1244" type="service">
+				<locationId>B1244</locationId>
+				<coord x="30.885584" y="121.350655"/>
+				<capacity-demand>17</capacity-demand>
+				<duration>17.3693168769</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1305" type="service">
+				<locationId>B1305</locationId>
+				<coord x="30.832869" y="121.377098"/>
+				<capacity-demand>3</capacity-demand>
+				<duration>10.1961524227</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1459" type="service">
+				<locationId>B1459</locationId>
+				<coord x="30.829479" y="121.263145"/>
+				<capacity-demand>9</capacity-demand>
+				<duration>14.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1471" type="service">
+				<locationId>B1471</locationId>
+				<coord x="30.899956" y="121.386955"/>
+				<capacity-demand>10</capacity-demand>
+				<duration>14.4868329805</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1484" type="service">
+				<locationId>B1484</locationId>
+				<coord x="30.882116" y="121.32737"/>
+				<capacity-demand>16</capacity-demand>
+				<duration>17.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1561" type="service">
+				<locationId>B1561</locationId>
+				<coord x="30.80851" y="121.34642"/>
+				<capacity-demand>8</capacity-demand>
+				<duration>13.4852813742</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1567" type="service">
+				<locationId>B1567</locationId>
+				<coord x="30.866928" y="121.374573"/>
+				<capacity-demand>2</capacity-demand>
+				<duration>9.24264068712</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1638" type="service">
+				<locationId>B1638</locationId>
+				<coord x="30.835623" y="121.24897"/>
+				<capacity-demand>23</capacity-demand>
+				<duration>19.3874945699</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1778" type="service">
+				<locationId>B1778</locationId>
+				<coord x="30.798056" y="121.377464"/>
+				<capacity-demand>9</capacity-demand>
+				<duration>14.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1869" type="service">
+				<locationId>B1869</locationId>
+				<coord x="30.84938" y="121.358002"/>
+				<capacity-demand>4</capacity-demand>
+				<duration>11.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1893" type="service">
+				<locationId>B1893</locationId>
+				<coord x="30.860415" y="121.277573"/>
+				<capacity-demand>2</capacity-demand>
+				<duration>9.24264068712</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B1988" type="service">
+				<locationId>B1988</locationId>
+				<coord x="30.784529" y="121.362633"/>
+				<capacity-demand>5</capacity-demand>
+				<duration>11.7082039325</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B2346" type="service">
+				<locationId>B2346</locationId>
+				<coord x="30.818815" y="121.384232"/>
+				<capacity-demand>8</capacity-demand>
+				<duration>13.4852813742</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B2656" type="service">
+				<locationId>B2656</locationId>
+				<coord x="30.821795" y="121.350418"/>
+				<capacity-demand>5</capacity-demand>
+				<duration>11.7082039325</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B3182" type="service">
+				<locationId>B3182</locationId>
+				<coord x="30.806679" y="121.352676"/>
+				<capacity-demand>7</capacity-demand>
+				<duration>12.9372539332</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B3229" type="service">
+				<locationId>B3229</locationId>
+				<coord x="30.8557" y="121.33725"/>
+				<capacity-demand>20</capacity-demand>
+				<duration>18.416407865</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B3415" type="service">
+				<locationId>B3415</locationId>
+				<coord x="30.838604" y="121.321381"/>
+				<capacity-demand>4</capacity-demand>
+				<duration>11.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B3469" type="service">
+				<locationId>B3469</locationId>
+				<coord x="30.887917" y="121.31842"/>
+				<capacity-demand>15</capacity-demand>
+				<duration>16.6189500386</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B3681" type="service">
+				<locationId>B3681</locationId>
+				<coord x="30.888857" y="121.385048"/>
+				<capacity-demand>4</capacity-demand>
+				<duration>11.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B3928" type="service">
+				<locationId>B3928</locationId>
+				<coord x="30.896338" y="121.378899"/>
+				<capacity-demand>2</capacity-demand>
+				<duration>9.24264068712</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B3971" type="service">
+				<locationId>B3971</locationId>
+				<coord x="30.810585" y="121.294006"/>
+				<capacity-demand>17</capacity-demand>
+				<duration>17.3693168769</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B4039" type="service">
+				<locationId>B4039</locationId>
+				<coord x="30.825436" y="121.285652"/>
+				<capacity-demand>2</capacity-demand>
+				<duration>9.24264068712</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B4201" type="service">
+				<locationId>B4201</locationId>
+				<coord x="30.851032" y="121.378128"/>
+				<capacity-demand>1</capacity-demand>
+				<duration>8.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B4254" type="service">
+				<locationId>B4254</locationId>
+				<coord x="30.897427" y="121.385925"/>
+				<capacity-demand>36</capacity-demand>
+				<duration>23.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B4337" type="service">
+				<locationId>B4337</locationId>
+				<coord x="30.795696" y="121.389267"/>
+				<capacity-demand>12</capacity-demand>
+				<duration>15.3923048454</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B4473" type="service">
+				<locationId>B4473</locationId>
+				<coord x="30.803629" y="121.334785"/>
+				<capacity-demand>3</capacity-demand>
+				<duration>10.1961524227</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B4661" type="service">
+				<locationId>B4661</locationId>
+				<coord x="30.880001" y="121.340469"/>
+				<capacity-demand>11</capacity-demand>
+				<duration>14.9498743711</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B4794" type="service">
+				<locationId>B4794</locationId>
+				<coord x="30.859943" y="121.338936"/>
+				<capacity-demand>24</capacity-demand>
+				<duration>19.6969384567</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B4799" type="service">
+				<locationId>B4799</locationId>
+				<coord x="30.883572" y="121.322075"/>
+				<capacity-demand>14</capacity-demand>
+				<duration>16.2249721603</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B4901" type="service">
+				<locationId>B4901</locationId>
+				<coord x="30.886576" y="121.325104"/>
+				<capacity-demand>4</capacity-demand>
+				<duration>11.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B4960" type="service">
+				<locationId>B4960</locationId>
+				<coord x="30.862568" y="121.296906"/>
+				<capacity-demand>1</capacity-demand>
+				<duration>8.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B5037" type="service">
+				<locationId>B5037</locationId>
+				<coord x="30.849339" y="121.343811"/>
+				<capacity-demand>21</capacity-demand>
+				<duration>18.7477270849</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B5220" type="service">
+				<locationId>B5220</locationId>
+				<coord x="30.786409" y="121.347443"/>
+				<capacity-demand>3</capacity-demand>
+				<duration>10.1961524227</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B5410" type="service">
+				<locationId>B5410</locationId>
+				<coord x="30.881344" y="121.333771"/>
+				<capacity-demand>11</capacity-demand>
+				<duration>14.9498743711</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B5450" type="service">
+				<locationId>B5450</locationId>
+				<coord x="30.815907" y="121.351578"/>
+				<capacity-demand>14</capacity-demand>
+				<duration>16.2249721603</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B5624" type="service">
+				<locationId>B5624</locationId>
+				<coord x="30.870768" y="121.362617"/>
+				<capacity-demand>2</capacity-demand>
+				<duration>9.24264068712</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B5710" type="service">
+				<locationId>B5710</locationId>
+				<coord x="30.869493" y="121.326355"/>
+				<capacity-demand>4</capacity-demand>
+				<duration>11.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B5888" type="service">
+				<locationId>B5888</locationId>
+				<coord x="30.845135" y="121.256821"/>
+				<capacity-demand>1</capacity-demand>
+				<duration>8.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B6165" type="service">
+				<locationId>B6165</locationId>
+				<coord x="30.892426" y="121.355804"/>
+				<capacity-demand>4</capacity-demand>
+				<duration>11.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B6290" type="service">
+				<locationId>B6290</locationId>
+				<coord x="30.830708" y="121.387291"/>
+				<capacity-demand>2</capacity-demand>
+				<duration>9.24264068712</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B6361" type="service">
+				<locationId>B6361</locationId>
+				<coord x="30.812326" y="121.288467"/>
+				<capacity-demand>10</capacity-demand>
+				<duration>14.4868329805</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B6690" type="service">
+				<locationId>B6690</locationId>
+				<coord x="30.788635" y="121.380157"/>
+				<capacity-demand>6</capacity-demand>
+				<duration>12.3484692283</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B6717" type="service">
+				<locationId>B6717</locationId>
+				<coord x="30.881727" y="121.347878"/>
+				<capacity-demand>6</capacity-demand>
+				<duration>12.3484692283</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B6730" type="service">
+				<locationId>B6730</locationId>
+				<coord x="30.886003" y="121.313713"/>
+				<capacity-demand>21</capacity-demand>
+				<duration>18.7477270849</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B6744" type="service">
+				<locationId>B6744</locationId>
+				<coord x="30.829819" y="121.23996"/>
+				<capacity-demand>11</capacity-demand>
+				<duration>14.9498743711</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B6746" type="service">
+				<locationId>B6746</locationId>
+				<coord x="30.829088" y="121.346779"/>
+				<capacity-demand>15</capacity-demand>
+				<duration>16.6189500386</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B6877" type="service">
+				<locationId>B6877</locationId>
+				<coord x="30.78154" y="121.364204"/>
+				<capacity-demand>9</capacity-demand>
+				<duration>14.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B7313" type="service">
+				<locationId>B7313</locationId>
+				<coord x="30.817167" y="121.361839"/>
+				<capacity-demand>3</capacity-demand>
+				<duration>10.1961524227</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B7431" type="service">
+				<locationId>B7431</locationId>
+				<coord x="30.772539" y="121.384064"/>
+				<capacity-demand>1</capacity-demand>
+				<duration>8.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B7645" type="service">
+				<locationId>B7645</locationId>
+				<coord x="30.805733" y="121.301689"/>
+				<capacity-demand>5</capacity-demand>
+				<duration>11.7082039325</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B7670" type="service">
+				<locationId>B7670</locationId>
+				<coord x="30.902674" y="121.382805"/>
+				<capacity-demand>13</capacity-demand>
+				<duration>15.8166538264</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B7703" type="service">
+				<locationId>B7703</locationId>
+				<coord x="30.843828" y="121.337013"/>
+				<capacity-demand>9</capacity-demand>
+				<duration>14.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B7781" type="service">
+				<locationId>B7781</locationId>
+				<coord x="30.834311" y="121.301094"/>
+				<capacity-demand>1</capacity-demand>
+				<duration>8.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B7843" type="service">
+				<locationId>B7843</locationId>
+				<coord x="30.871906" y="121.334999"/>
+				<capacity-demand>3</capacity-demand>
+				<duration>10.1961524227</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8017" type="service">
+				<locationId>B8017</locationId>
+				<coord x="30.905081" y="121.376801"/>
+				<capacity-demand>4</capacity-demand>
+				<duration>11.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8033" type="service">
+				<locationId>B8033</locationId>
+				<coord x="30.880144" y="121.352638"/>
+				<capacity-demand>4</capacity-demand>
+				<duration>11.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8053" type="service">
+				<locationId>B8053</locationId>
+				<coord x="30.879271" y="121.319176"/>
+				<capacity-demand>2</capacity-demand>
+				<duration>9.24264068712</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8065" type="service">
+				<locationId>B8065</locationId>
+				<coord x="30.836327" y="121.348724"/>
+				<capacity-demand>5</capacity-demand>
+				<duration>11.7082039325</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8093" type="service">
+				<locationId>B8093</locationId>
+				<coord x="30.853769" y="121.340599"/>
+				<capacity-demand>25</capacity-demand>
+				<duration>20.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8108" type="service">
+				<locationId>B8108</locationId>
+				<coord x="30.790056" y="121.33931"/>
+				<capacity-demand>5</capacity-demand>
+				<duration>11.7082039325</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8219" type="service">
+				<locationId>B8219</locationId>
+				<coord x="30.906116" y="121.387512"/>
+				<capacity-demand>7</capacity-demand>
+				<duration>12.9372539332</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8267" type="service">
+				<locationId>B8267</locationId>
+				<coord x="30.827065" y="121.238358"/>
+				<capacity-demand>13</capacity-demand>
+				<duration>15.8166538264</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8330" type="service">
+				<locationId>B8330</locationId>
+				<coord x="30.904909" y="121.395386"/>
+				<capacity-demand>13</capacity-demand>
+				<duration>15.8166538264</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8449" type="service">
+				<locationId>B8449</locationId>
+				<coord x="30.860626" y="121.330254"/>
+				<capacity-demand>5</capacity-demand>
+				<duration>11.7082039325</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8501" type="service">
+				<locationId>B8501</locationId>
+				<coord x="30.843422" y="121.350822"/>
+				<capacity-demand>6</capacity-demand>
+				<duration>12.3484692283</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8554" type="service">
+				<locationId>B8554</locationId>
+				<coord x="30.887505" y="121.357132"/>
+				<capacity-demand>2</capacity-demand>
+				<duration>9.24264068712</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+			<service id="B8590" type="service">
+				<locationId>B8590</locationId>
+				<coord x="30.809423" y="121.36586"/>
+				<capacity-demand>9</capacity-demand>
+				<duration>14.0</duration>
+				<timeWindows>
+					<timeWindow>
+						<start>0.0</start>
+						<end>999999</end>
+					</timeWindow>
+				</timeWindows>
+			</service>
+		</services>
+		<shipments/>
+	</problem>
